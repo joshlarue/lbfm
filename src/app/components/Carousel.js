@@ -6,7 +6,7 @@ export default function Carousel(props) {
     return (
       <CarouselItem itemName={item.itemName} artistName={item.artistName} rating={item.rating} key={item.id} />
     )
-  })
+  });
 
 
   return (
