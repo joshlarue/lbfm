@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex bg-base w-full min-h-screen">
+        <div className="flex flex-col items-start bg-base w-full min-h-screen">
           <Header />
           {children}
         </div>
