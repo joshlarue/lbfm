@@ -70,7 +70,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="w-full min-h-screen flex flex-col gap-10">
+      <div className="w-full min-h-screen flex flex-col gap-10 p-3">
         <Carousel title="hot albums" items={firstCarousel} />
         <Carousel title="trending songs" items={secondCarousel} />
         <Carousel title="for you" items={thirdCarousel} />
