@@ -19,7 +19,6 @@ export default function Stars(props) {
                   key={stars.length} />)
     }
 
-
     return stars;
   }
 
@@ -27,7 +26,7 @@ export default function Stars(props) {
   
   return (
     <>
-      <div className="w-full h-[100vh]">{stars}</div>
+      <div className="flex gap-1 w-5">{stars}</div>
     </>
   )
 }
