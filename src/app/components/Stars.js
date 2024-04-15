@@ -11,12 +11,14 @@ export default function Stars(props) {
     for (let i = 0; i < numStars && i < 5; i++) {
       stars.push(<Image 
                     src={star} 
-                    key={stars.length} />)
+                    key={stars.length} 
+                    width={props.width} />)
     }
     for (stars.length; stars.length < 5;) {
       stars.push(<Image 
                   src={blankstar} 
-                  key={stars.length} />)
+                  key={stars.length} 
+                  width={props.width} />)
     }
 
     return stars;
@@ -26,7 +28,7 @@ export default function Stars(props) {
   
   return (
     <>
-      <div className="flex gap-1 w-5">{stars}</div>
+      <div className="flex" style={{gap: props.gap+"vw"}}>{stars}</div>
     </>
   )
 }
