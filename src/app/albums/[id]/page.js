@@ -1,6 +1,6 @@
 'use client'
-import Carousel from "./components/Carousel";
-import Image from "next/image";
+import Stars from "@/app/components/Stars";
+
 // used before I have DB connected
 const firstCarousel = [
   {
@@ -68,14 +68,25 @@ const Albums = [firstCarousel, secondCarousel, thirdCarousel];
 
 
 
-export default function Home() {
+export default function Page(albumId) {
+  let id = albumId.params.id;
+  // use album ID to populate album page
+  for (let i = 0; i < Albums.length; i++) {
+    for (let j = 0; j < Albums[i].length; j++) {
+      if (Albums[i][j].id == id) {
+        console.log(Albums[i][j]);
+      }
+    }
+  }
+
   return (
     <>
-        <div className="w-full min-h-screen flex flex-col gap-10 p-3">
-          <Carousel title="hot albums" items={firstCarousel} />
-          <Carousel title="trending songs" items={secondCarousel} />
-          <Carousel title="for you" items={thirdCarousel} />
+      <div className="border-2 w-full">
+        <div className="flex flex-col w-[50%]">
+          <p>community rating</p>
+          <Stars numStars={4} />
         </div>
+      </div>
     </>
-  );
+  )
 }
