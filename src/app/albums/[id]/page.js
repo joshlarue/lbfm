@@ -84,7 +84,7 @@ export default function Page(albumId) {
       <div className="border-2 w-full">
         <div className="flex flex-col w-[50%]">
           <p>community rating</p>
-          <Stars numStars={4} />
+          <Stars numStars={2} />
         </div>
       </div>
     </>
