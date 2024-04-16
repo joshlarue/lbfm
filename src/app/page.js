@@ -1,6 +1,8 @@
 'use client'
+const mysql = require('mysql');
 import Carousel from "./components/Carousel";
 import Image from "next/image";
+
 // used before I have DB connected
 const firstCarousel = [
   {
@@ -65,6 +67,7 @@ const thirdCarousel = [
   },    
 ]
 const Albums = [firstCarousel, secondCarousel, thirdCarousel];
+
 
 
 

@@ -9,9 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "fs-extra": "^11.2.0",
+    "mysql": "^2.18.1",
+    "net": "^1.0.2",
+    "next": "14.2.1",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.1"
+    "react-scripts": "^5.0.1",
+    "tls": "^0.0.1"
   },
   "devDependencies": {
     "postcss": "^8",
