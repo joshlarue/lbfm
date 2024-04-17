@@ -5,17 +5,21 @@ import Image from "next/image";
 
 export default function Home() {
   const [albums, setAlbums] = useState([]);
-
+  const [display, setDisplay] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:3000/api/populatecarousel', {method: "GET"});
-        if (!response.ok) {
-          throw new Error("Network fetching did not work!");
+        const responseData = await response.json();
+        console.log(responseData);
+
+        setAlbums(responseData);
+        for (let i = 0; i < responseData.length; i++) {
+          console.log(responseData[i]);
         }
-        const data = await response.json();
-        console.log(data);
-        setAlbums(data);
+        
+        setDisplay(<Carousel items={responseData} />);
+
       } catch (error) {
         console.error("Error fetching albums: " + error);
       }
@@ -26,7 +30,7 @@ export default function Home() {
   return (
     <>
         <div className="w-full min-h-screen flex flex-col gap-10 p-3">
-
+          {display}
         </div>
     </>
   );

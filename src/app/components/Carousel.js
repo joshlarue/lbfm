@@ -2,9 +2,9 @@ import CarouselItem from "./CarouselItem"
 
 export default function Carousel(props) {
 
-  const items = props.items.map(function(item) {
+  const items = props.items.map((item) => {
     return (
-      <CarouselItem itemName={item.itemName} artistName={item.artistName} rating={item.rating} id={item.id} key={item.id} />
+      <CarouselItem itemName={item.album_title} artistName={item.artist_id} rating={item.avg_rating} id={item.album_id} key={item.album_id} />
     )
   });
 
