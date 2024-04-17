@@ -32,7 +32,7 @@ export default function Page(albumId) {
             <div className="w-[60vw] h-[60vw] bg-primary rounded-tr-md rounded-br-md"></div>
             <div className="flex flex-col p-3">
               <h3 className="">{album.album_title}</h3>
-              <p className="text-sm">{album.artist_id}</p>
+              <p className="text-sm">{album.artist_name}</p>
               <p>{album.date}</p>
             </div>
           </div>

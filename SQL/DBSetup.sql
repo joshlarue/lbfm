@@ -1,4 +1,3 @@
-SET echo ON
 
 DROP TABLE reviews;
 DROP TABLE songs;
@@ -86,9 +85,17 @@ INSERT INTO albums (album_title, date_released, artist_id, avg_rating)
 VALUES
   ('25', '2015-11-20', 1, 4.5),
   ('Unorthodox Jukebox', '2012-12-07', 2, 4.2),
-  ('Pang', '2023-12-29', 5, 4.9),
-  ('Life In Britain', '2011-10-2', 3, 1.4),
-  ('A Plethora of Goldfish', '2024-4-15', 4, 3.7);
+  ('Pang', '2023-12-29', 3, 4.9),
+  ('Life In Britain', '2011-10-2', 4, 1.4),
+  ('A Plethora of Goldfish', '2024-4-15', 5, 3.7);
+
+INSERT INTO album_artists (artist_id, album_id)
+VALUES
+  (1, 1),
+  (2, 2),
+  (3, 3),
+  (4, 4),
+  (5, 5);
 
 INSERT INTO songs (title, duration, artist, date_released, album_id, song_id, avg_rating)
 VALUES
@@ -102,5 +109,3 @@ INSERT INTO reviews (song_id, song_rating, song_review, album_id, album_rating, 
 VALUES
   (1, 5, 'Amazing vocals!', 1, 4, 'Solid album overall', '2024-03-06', 1),
   (2, 4, 'Catchy tune!', 2, 4, 'Great mix of styles', '2024-03-06', 2);
-
-echo OFF

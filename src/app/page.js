@@ -14,7 +14,7 @@ export default function Home() {
 
         setAlbums(responseData);
         
-        setDisplay(<Carousel items={responseData} />);
+        setDisplay(<Carousel items={responseData} title={"hot albums"} />);
 
       } catch (error) {
         console.error("Error fetching albums: " + error);

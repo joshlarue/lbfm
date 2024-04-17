@@ -4,7 +4,7 @@ export default function Carousel(props) {
 
   const items = props.items.map((item) => {
     return (
-      <CarouselItem itemName={item.album_title} artistName={item.artist_id} rating={item.avg_rating} id={item.album_id} key={item.album_id} />
+      <CarouselItem itemName={item.album_title} artistName={item.artist_name} rating={item.avg_rating} id={item.album_id} key={item.album_id} />
     )
   });
 
