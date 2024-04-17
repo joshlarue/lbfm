@@ -11,12 +11,8 @@ export default function Page(albumId) {
       try {
         const response = await fetch('http://localhost:3000/api/getalbum/'+id, {method: "GET"});
         const responseData = await response.json();
-
-        for (let i = 0; i < responseData.length; i++) {
-          console.log(responseData[i]);
-        }
+        
         setAlbum(responseData[0]);
-        console.log(album);
       } catch (error) {
         console.error("Error fetching albums: " + error);
       }

@@ -11,7 +11,6 @@ export default function Home() {
       try {
         const response = await fetch('http://localhost:3000/api/populatecarousel', {method: "GET"});
         const responseData = await response.json();
-        console.log(responseData);
 
         setAlbums(responseData);
         

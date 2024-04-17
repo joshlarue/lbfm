@@ -12,13 +12,15 @@ export default function Stars(props) {
       stars.push(<Image 
                     src={star} 
                     key={stars.length} 
-                    width={props.width} />)
+                    width={props.width} 
+                    alt={"star"} />)
     }
     for (stars.length; stars.length < 5;) {
       stars.push(<Image 
                   src={blankstar} 
                   key={stars.length} 
-                  width={props.width} />)
+                  width={props.width} 
+                  alt={"star"} />)
     }
 
     return stars;
