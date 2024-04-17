@@ -14,9 +14,6 @@ export default function Home() {
         console.log(responseData);
 
         setAlbums(responseData);
-        for (let i = 0; i < responseData.length; i++) {
-          console.log(responseData[i]);
-        }
         
         setDisplay(<Carousel items={responseData} />);
 
