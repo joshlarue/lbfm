@@ -2,8 +2,6 @@
 const mysql = require('mysql2');
 
 export async function GET(request) {
-  const albumId = request.url.split("/")[request.url.split("/").length-1];
-  console.log(albumId);
   let connection = mysql.createConnection({
     host     : process.env.MYSQL_HOST,
     user     : process.env.MYSQL_USER,
@@ -11,12 +9,18 @@ export async function GET(request) {
     database : process.env.MYSQL_DATABASE
   });
   connection.connect();
-  let result = connection.query('SELECT * from albums WHERE artist_id='+albumId+";", function (error, results, fields) {
-    if (error) throw error;
-    console.log(results);
-    connection.end();
-    return results;
-  });
+
+  const getData = async (query) => {
+    connection.query(query, function (error, result, fields) {
+      if (error) throw error;;
+      return result;
+    });
+  }
+  // result is returning undefined
+  let result = await getData('SELECT * from albums');
+  connection.end();
+  console.log(result);
+  
 
   return new Response(result);
-} 
+}
