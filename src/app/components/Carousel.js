@@ -13,7 +13,7 @@ export default function Carousel(props) {
     <>
       <div className="flex flex-col gap-3 w-full">
         <h2 className="text-text font-bold text-xl pl-5">{props.title}</h2>
-        <div className="flex bg-primary w-full h-fit overflow-scroll rounded-md">
+        <div className="flex bg-primary w-full min-h-fit overflow-scroll rounded-md">
           {items}
         </div>
       </div>

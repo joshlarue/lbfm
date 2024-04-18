@@ -13,6 +13,7 @@ export default function Home() {
         const responseData = await response.json();
 
         setAlbums(responseData);
+        console.log(responseData[0]);
         
         setDisplay(<Carousel items={responseData} title={"hot albums"} />);
 

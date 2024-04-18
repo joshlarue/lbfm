@@ -1,0 +1,12 @@
+-- gets all songs by a certain artist
+-- can add a where clause to filter by album
+select song_title 
+from songs s, artists 
+where artist_name = {}
+AND s.artist_id = (SELECT artist_id 
+                    FROM artists 
+                    WHERE artist_name = {});
+
+SELECT DISTINCT album_title, artist_name, al.avg_rating, album_id 
+FROM albums al, artists ar 
+WHERE al.artist_id = ar.artist_id;
