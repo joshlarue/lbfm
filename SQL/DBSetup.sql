@@ -25,11 +25,15 @@ CREATE TABLE albums (
   album_title VARCHAR(100),
   date_released DATE,
   album_id VARCHAR(128),
-  album_image VARCHAR(128),
+  album_image LONGBLOB,
   artist_id VARCHAR(128),
   avg_rating DOUBLE(2,1),
   CONSTRAINT pk_album_id PRIMARY KEY (album_id),
   FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
+);
+
+CREATE TABLE test (
+  album_img BLOB
 );
 
 CREATE TABLE album_artists (
