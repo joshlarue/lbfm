@@ -71,11 +71,11 @@ headers = {
 # my kitchen sync playlist id
 playlist_id = '2ZqjemHmfmmpVomtt85Vd3'
 
-for x in range(3, 27):
+for x in range(0, 2):
   
   r = requests.get(BASE_URL + f'playlists/{playlist_id}/tracks?offset={x*100}', headers=headers)
   r = r.json()
-  print(len(r['items']))
+  print(len(r['items']*x))
 
   for i in range(len(r['items'])):
     # gets release date of album
@@ -83,24 +83,26 @@ for x in range(3, 27):
     
     # gets name of album of track
     album_title = r['items'][i]['track']['album']['name']
+    album_id = hash_string(album_title)
+    album_ratings = get_random_ratings(10)
+    album_image = r['items'][i]['track']['album']['images'][0]['url']
 
     # gets name of title of track
     song_title = r['items'][i]['track']['name']
+    song_id = hash_string(song_title)
+    song_ratings = get_random_ratings(10)
 
     # gets name of artist
     artist_name = r['items'][i]['track']['album']['artists'][0]['name']
+    artist_id = hash_string(artist_name)
+    artist_bio = hash_string(artist_name + artist_id)
 
     # able to be manually input
     #artist_name = input("Artist name: ")
-    artist_id = hash_string(artist_name)
     #album_title = input("Album title: ")
-    album_id = hash_string(album_title)
-    album_ratings = get_random_ratings(10)
     # date_released = input("Date released (MM_DD_YY): ")
     # song_titles = input("Song titles (separated by commas): ")
     # song_ids = get_random_song_ids(10)
-    song_ratings = get_random_ratings(10)
-    artist_bio = hash_string(artist_name + artist_id)
 
     # calculate avg album rating
     album_avg_rating = 0
@@ -122,9 +124,9 @@ for x in range(3, 27):
     ]
     mycursor.executemany(sql, val)
 
-    sql = "INSERT IGNORE INTO albums (album_title, album_id, date_released, artist_id, avg_rating) VALUES (%s, %s, %s, %s, %s)"
+    sql = "INSERT IGNORE INTO albums (album_title, album_id, album_image, date_released, artist_id, avg_rating) VALUES (%s, %s, %s, %s, %s, %s)"
     val = [
-      (album_title, album_id, date_released, artist_id, album_avg_rating)
+      (album_title, album_id, album_image, date_released, artist_id, album_avg_rating)
     ]
     mycursor.executemany(sql, val)
 
@@ -145,7 +147,7 @@ for x in range(3, 27):
 
     sql = "INSERT IGNORE INTO songs (song_title, duration, artist_id, date_released, album_id, song_id, avg_rating) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     val = []
-    val.append((song_title, random.getrandbits(3), artist_id, date_released, album_id, random.getrandbits(128), song_avg_rating))
+    val.append((song_title, random.getrandbits(3), artist_id, date_released, album_id, song_id, song_avg_rating))
     mycursor.executemany(sql, val)
 
     mydb.commit()

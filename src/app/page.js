@@ -13,9 +13,23 @@ export default function Home() {
         const responseData = await response.json();
 
         setAlbums(responseData);
-        console.log(responseData[0]);
+        console.log(responseData);
+        let firstCarouselData = responseData.slice(0, 7);
+        let secondCarouselData = responseData.slice(7, 14);
+        let thirdCarouselData = responseData.slice(14, 21);
+        console.log(firstCarouselData);
+        console.log(secondCarouselData);
+        console.log(thirdCarouselData);
         
-        setDisplay(<Carousel items={responseData} title={"hot albums"} />);
+        setDisplay(
+          <>
+            <Carousel items={firstCarouselData} title={"hot albums"} />
+            <Carousel items={secondCarouselData} title={"trending songs"} />
+            <Carousel items={thirdCarouselData} title={"for you"} />
+          </>
+
+
+        );
 
       } catch (error) {
         console.error("Error fetching albums: " + error);
