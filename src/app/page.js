@@ -13,7 +13,6 @@ export default function Home() {
         const responseData = await response.json();
 
         setAlbums(responseData);
-        console.log(responseData);
         let firstCarouselData = responseData.slice(0, 7);
         let secondCarouselData = responseData.slice(7, 14);
         let thirdCarouselData = responseData.slice(14, 21);

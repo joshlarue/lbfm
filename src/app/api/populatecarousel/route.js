@@ -1,5 +1,6 @@
 'use server'
 import pool from '../../db/pool';
+import 'fs-extra';
 
 export async function GET(req, res) {
   try {
