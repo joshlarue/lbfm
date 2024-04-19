@@ -8,7 +8,7 @@ export async function GET(req, res) {
   try {
     const connection = await pool.getConnection();
     const [results] = await connection.query(`
-                                            SELECT album_title, artist_name, album_image, song_title, al.avg_rating, s.avg_rating, al.album_id
+                                            SELECT album_title, artist_name, album_image, song_title, song_id, al.avg_rating, s.avg_rating, al.album_id
                                             FROM albums al, artists ar, album_artists aa, songs s
                                             WHERE al.album_id = aa.album_id
                                             AND al.artist_id = aa.artist_id
