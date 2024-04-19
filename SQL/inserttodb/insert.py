@@ -69,15 +69,16 @@ headers = {
 }
 
 # my kitchen sync playlist id
-playlist_id = '2ZqjemHmfmmpVomtt85Vd3'
+playlist_id = '4OVzptJdDjrtqlsy1szuN4'
 
-for x in range(0, 2):
+for x in range(0, 27):
   
   r = requests.get(BASE_URL + f'playlists/{playlist_id}/tracks?offset={x*100}', headers=headers)
   r = r.json()
   print(len(r['items']*x))
 
   for i in range(len(r['items'])):
+    print("Processing next song...")
     # gets release date of album
     date_released = r['items'][i]['track']['album']['release_date']
     
@@ -85,7 +86,12 @@ for x in range(0, 2):
     album_title = r['items'][i]['track']['album']['name']
     album_id = hash_string(album_title)
     album_ratings = get_random_ratings(10)
-    album_image = r['items'][i]['track']['album']['images'][0]['url']
+    
+
+    # use to read/get from db
+    # with open('./album_images/test.jpg', 'wb') as f:
+    # ...     for chunk in data[0]:  
+    # ...             f.write(chunk)
 
     # gets name of title of track
     song_title = r['items'][i]['track']['name']
@@ -118,6 +124,15 @@ for x in range(0, 2):
       total += i
     song_avg_rating = total / len(album_ratings)
 
+    # write image from spotify to local storage so db can recieve info
+    if not os.path.exists(f'./album_images/{album_id}.jpg'):
+      remote_album_image = requests.get(r['items'][i]['track']['album']['images'][0]['url'])
+      with open(f'./album_images/{album_id}.jpg', 'wb') as f:
+        for chunk in remote_album_image:
+          f.write(chunk)
+    # read in BLOB data (this is what is used by the DB)
+    album_image_blob = open(f'./album_images/{album_id}.jpg', 'rb').read()
+
     sql = "INSERT IGNORE INTO artists (artist_name, artist_id, bio) VALUES (%s, %s, %s)"
     val = [
       (artist_name, artist_id, artist_bio)
@@ -126,9 +141,10 @@ for x in range(0, 2):
 
     sql = "INSERT IGNORE INTO albums (album_title, album_id, album_image, date_released, artist_id, avg_rating) VALUES (%s, %s, %s, %s, %s, %s)"
     val = [
-      (album_title, album_id, album_image, date_released, artist_id, album_avg_rating)
+      (album_title, album_id, album_image_blob, date_released, artist_id, album_avg_rating)
     ]
     mycursor.executemany(sql, val)
+    mydb.commit()
 
     sql = "INSERT IGNORE INTO album_artists (artist_id, album_id) VALUES (%s, %s)"
     val = [
