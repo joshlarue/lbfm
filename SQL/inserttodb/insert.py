@@ -75,10 +75,9 @@ for x in range(0, 27):
   
   r = requests.get(BASE_URL + f'playlists/{playlist_id}/tracks?offset={x*100}', headers=headers)
   r = r.json()
-  print(len(r['items']*x))
 
   for i in range(len(r['items'])):
-    print("Processing next song...")
+    print(f"Processing song {x*i}")
     # gets release date of album
     date_released = r['items'][i]['track']['album']['release_date']
     
@@ -86,12 +85,7 @@ for x in range(0, 27):
     album_title = r['items'][i]['track']['album']['name']
     album_id = hash_string(album_title)
     album_ratings = get_random_ratings(10)
-    
-
-    # use to read/get from db
-    # with open('./album_images/test.jpg', 'wb') as f:
-    # ...     for chunk in data[0]:  
-    # ...             f.write(chunk)
+    album_image = r['items'][i]['track']['album']['images'][0]['url']
 
     # gets name of title of track
     song_title = r['items'][i]['track']['name']
@@ -103,12 +97,6 @@ for x in range(0, 27):
     artist_id = hash_string(artist_name)
     artist_bio = hash_string(artist_name + artist_id)
 
-    # able to be manually input
-    #artist_name = input("Artist name: ")
-    #album_title = input("Album title: ")
-    # date_released = input("Date released (MM_DD_YY): ")
-    # song_titles = input("Song titles (separated by commas): ")
-    # song_ids = get_random_song_ids(10)
 
     # calculate avg album rating
     album_avg_rating = 0
@@ -124,15 +112,6 @@ for x in range(0, 27):
       total += i
     song_avg_rating = total / len(album_ratings)
 
-    # write image from spotify to local storage so db can recieve info
-    if not os.path.exists(f'./album_images/{album_id}.jpg'):
-      remote_album_image = requests.get(r['items'][i]['track']['album']['images'][0]['url'])
-      with open(f'./album_images/{album_id}.jpg', 'wb') as f:
-        for chunk in remote_album_image:
-          f.write(chunk)
-    # read in BLOB data (this is what is used by the DB)
-    album_image_blob = open(f'./album_images/{album_id}.jpg', 'rb').read()
-
     sql = "INSERT IGNORE INTO artists (artist_name, artist_id, bio) VALUES (%s, %s, %s)"
     val = [
       (artist_name, artist_id, artist_bio)
@@ -141,7 +120,7 @@ for x in range(0, 27):
 
     sql = "INSERT IGNORE INTO albums (album_title, album_id, album_image, date_released, artist_id, avg_rating) VALUES (%s, %s, %s, %s, %s, %s)"
     val = [
-      (album_title, album_id, album_image_blob, date_released, artist_id, album_avg_rating)
+      (album_title, album_id, album_image, date_released, artist_id, album_avg_rating)
     ]
     mycursor.executemany(sql, val)
     mydb.commit()
