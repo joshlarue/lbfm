@@ -1,9 +1,7 @@
 'use client'
-import Stars from "@/app/components/Stars";
 import Songs from "@/app/components/Songs";
 import Album from "@/app/components/Album";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import RatingBtns from "@/app/components/RatingBtns";
 
 export default function Page(albumId) {
@@ -16,9 +14,9 @@ export default function Page(albumId) {
       try {
         const response = await fetch('http://localhost:3000/api/getalbum/'+id, {method: "GET"});
         const responseData = await response.json();
-
-        setAlbum(responseData[0]);
-        setSongs(responseData);
+        console.log(responseData[0]);
+        setAlbum(responseData[0][0]);
+        setSongs(responseData[1]);
 
       } catch (error) {
         console.error("Error fetching albums: " + error);

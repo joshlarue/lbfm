@@ -1,7 +1,8 @@
 import Image from "next/image";
+import { useState } from "react";
 
-export default function Album(props) {
-  let album = props.album;
+export default function Album({album}) {
+
   return (
     <div className="flex flex-col gap-1">
       <div className="w-[60vw] bg-primary relative rounded-tr-md rounded-br-md shadow-md">
