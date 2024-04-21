@@ -17,6 +17,7 @@ export default function Page(albumId) {
         console.log(responseData[0]);
         setAlbum(responseData[0][0]);
         setSongs(responseData[1]);
+        console.log(songs);
 
       } catch (error) {
         console.error("Error fetching albums: " + error);

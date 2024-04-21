@@ -42,7 +42,7 @@ CREATE TABLE album_artists (
 
 CREATE TABLE songs (
   song_title VARCHAR(100),
-  duration DOUBLE(5,2),
+  track_number INT,
   artist_id VARCHAR(128),
   date_released DATE,
   album_id VARCHAR(128),

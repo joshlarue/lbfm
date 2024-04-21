@@ -78,6 +78,7 @@ for x in range(0, 27):
 
   for i in range(len(r['items'])):
     print(f"Processing song {x*i}")
+    track_number = int(r['items'][i]['track']['track_number'])
     # gets release date of album
     date_released = r['items'][i]['track']['album']['release_date']
     
@@ -140,9 +141,9 @@ for x in range(0, 27):
     # for (i, song_title_) in enumerate(list_of_songs):
     #   val.append((song_title_, random.getrandbits(3), artist_id, date_released, album_id, random.getrandbits(128), song_avg_rating))
 
-    sql = "INSERT IGNORE INTO songs (song_title, duration, artist_id, date_released, album_id, song_id, avg_rating) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    sql = "INSERT IGNORE INTO songs (song_title, track_number, artist_id, date_released, album_id, song_id, avg_rating) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     val = []
-    val.append((song_title, random.getrandbits(3), artist_id, date_released, album_id, song_id, song_avg_rating))
+    val.append((song_title, track_number, artist_id, date_released, album_id, song_id, song_avg_rating))
     mycursor.executemany(sql, val)
 
     mydb.commit()

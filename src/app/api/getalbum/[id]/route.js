@@ -19,10 +19,11 @@ export async function GET(req, res) {
                                             `);
 
     const [songResults] = await connection.query(`
-                                            SELECT DISTINCT song_title, song_id, s.avg_rating
+                                            SELECT DISTINCT song_title, song_id, s.avg_rating, track_number
                                             FROM albums al, songs s
                                             WHERE s.album_id = al.album_id
-                                            AND al.album_id = '${albumId}';
+                                            AND al.album_id = '${albumId}'
+                                            ORDER BY track_number ASC;
                                             `);
 
     connection.release();
