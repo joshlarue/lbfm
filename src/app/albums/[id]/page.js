@@ -4,6 +4,7 @@ import Songs from "@/app/components/Songs";
 import Album from "@/app/components/Album";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import RatingBtns from "@/app/components/RatingBtns";
 
 export default function Page(albumId) {
   let id = albumId.params.id;
@@ -32,14 +33,16 @@ export default function Page(albumId) {
         <div className="w-full flex">
           <div className="flex flex-col w-[60%]">
             <div className="p-3 flex flex-col gap-1">
-              <p>community rating</p>
-              <Stars numStars={album.avg_rating} width={25} gap={1.5} />
+              <p className="text-lg font-bold">community rating: <span className="text-accent">{album.avg_rating}</span></p>
+              {/* <Stars numStars={album.avg_rating} width={25} gap={1.5} /> */}
             </div>
             <Album album={album} />
 
           </div>
-          <div className="flex flex-col w-full items-left mt-[10vh] mx-[5vw] gap-1">
-            <p className="text-sm">have your say. drag the songs to rank them.</p>
+          <div className="flex flex-col w-full items-left mt-[10vh] mx-[5vw] gap-5">
+            <p className="text-lg font-bold -mb-4">your rating:</p>
+            <RatingBtns />
+            <button className="w-full p-1 rounded-md bg-primary">comments</button>
           </div>
         </div>
         <Songs songs={songs} />

@@ -6,14 +6,13 @@ export default function Songs(props) {
 
   useEffect(() => {
     setSongsOrder(props.songs);
+    console.log(songs);
   }, [props.songs]);
-
-  const songIds = songs.map((song) => song.song_id);
 
   return (
     <div className="w-full flex flex-col mt-3">
         <Reorder.Group axis="y" onReorder={setSongsOrder} values={songs}>
-          <div className="w-[60%] flex flex-col gap-1 h-fit">
+          <div className="w-[75%] flex flex-col gap-1 h-fit">
             {songs.map((song) => {
               return (
                   <Song 
@@ -35,7 +34,7 @@ function Song(props) {
     <Reorder.Item
       style={{ y }}
       value={props.song}
-      className="bg-[#242024] p-2 rounded-tr-md rounded-br-md flex items-center shadow-sm justify-between">
+      className="bg-base-dark p-2 rounded-tr-md rounded-br-md flex items-center shadow-sm justify-between">
 
       <p className="text-sm">{props.song.song_title}</p>
       <p className="text-s text-accent font-extrabold">{props.song.avg_rating}</p>
