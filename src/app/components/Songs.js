@@ -1,19 +1,19 @@
 import { Reorder, useMotionValue } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { ToSaveContext } from "../albums/[id]/page";
 
 export default function Songs(props) {
-  const [songs, setSongsOrder] = useState(props.songs);
+  const { songOrder, setSongsOrder } = useContext(ToSaveContext);
 
-  useEffect(() => {
-    setSongsOrder(props.songs);
-    console.log(songs);
-  }, [props.songs]);
+  // useEffect(() => {
+  //   setSongsOrder(props.songs);
+  // }, [props.songs]);
 
   return (
     <div className="w-full flex flex-col mt-3">
-        <Reorder.Group axis="y" onReorder={setSongsOrder} values={songs}>
+        <Reorder.Group axis="y" onReorder={setSongsOrder} values={songOrder}>
           <div className="w-[75%] flex flex-col gap-1 h-fit">
-            {songs.map((song) => {
+            {songOrder.map((song) => {
               return (
                   <Song 
                     song={song}

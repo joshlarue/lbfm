@@ -53,16 +53,11 @@ CREATE TABLE songs (
   FOREIGN KEY (album_id) REFERENCES albums(album_id)
 );
 
-CREATE TABLE reviews (
-  song_id VARCHAR(128),
-  song_rating INTEGER(1),
-  song_review VARCHAR(128),
+CREATE TABLE album_review (
   album_id VARCHAR(128),
   album_rating INTEGER(1),
-  album_review VARCHAR(128),
-  date_of_review DATE,
-  user_id VARCHAR(128),
-  FOREIGN KEY (song_id) REFERENCES songs(song_id),
+  songs_ranking VARCHAR(128),
+  --user_id VARCHAR(128),
   FOREIGN KEY (album_id) REFERENCES albums(album_id),
-  FOREIGN KEY (user_id) REFERENCES users(user_id)
+  --FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
