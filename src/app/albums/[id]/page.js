@@ -10,10 +10,10 @@ export const ToSaveContext = createContext(null);
 export default function Page(albumId) {
   let id = albumId.params.id;
   const [album, setAlbum] = useState({});
-  const [songs, setSongs] = useState([]);
   const [saved, setSaved] = useState();
   const [pressedNumber, setPressedNumber] = useState(null);
 
+  const [songs, setSongs] = useState([])
   const [songOrder, setSongOrder] = useState([]);
   const [albumRating, setAlbumRating] = useState();
 
@@ -23,9 +23,11 @@ export default function Page(albumId) {
       try {
         const response = await fetch('http://localhost:3000/api/getalbum/'+id, {method: "GET"});
         const responseData = await response.json();
+        console.log(responseData);
 
         setAlbum(responseData[0][0]);
-        setSongOrder(responseData[1]);
+        setSongs(responseData[1]);
+        setSongOrder(responseData[2]);
 
       } catch (error) {
         console.error("Error fetching albums: " + error);
@@ -36,7 +38,7 @@ export default function Page(albumId) {
 
   return (
     <>
-      <ToSaveContext.Provider value={{ album, songOrder, setSongOrder, albumRating, setAlbumRating, saved, setSaved, pressedNumber, setPressedNumber }}>
+      <ToSaveContext.Provider value={{ album, songs, setSongs, songOrder, setSongOrder, albumRating, setAlbumRating, saved, setSaved, pressedNumber, setPressedNumber }}>
         <div className="w-full flex flex-col justify-center items-left">
           <div className="w-full flex">
             <div className="flex flex-col w-[60%]">
@@ -54,7 +56,7 @@ export default function Page(albumId) {
               <button className="w-full p-1 rounded-md bg-primary">comments</button>
             </div>
           </div>
-          <Songs songs={songOrder} />
+          <Songs songs={songs} />
         </div>
       </ToSaveContext.Provider>
     </>

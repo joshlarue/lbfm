@@ -3,10 +3,10 @@ import pool from '../../db/pool';
 
 export async function POST(req, res) {
   const request = await req.json();
+  console.log(request);
 
   // square brackets turn request into an array so map can work :)
-  const songOrder = request[2].map(song => song.track_number);
-  let stringSongOrder = songOrder.join(",");
+  const stringSongOrder = request[2].join(",");
 
   const album_id = request[0].album_id;
   const album_rating = request[1];
