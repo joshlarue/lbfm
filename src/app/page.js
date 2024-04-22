@@ -1,9 +1,15 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect, createContext } from "react";
 import Carousel from "./components/Carousel";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import Login from "./components/Login";
+
+export const Auth = createContext();
 
 export default function Home() {
+  const [loggedIn, setLoggedIn] = useState(false);
+
   const [albums, setAlbums] = useState([]);
   const [display, setDisplay] = useState([]);
   useEffect(() => {
@@ -39,9 +45,21 @@ export default function Home() {
 
   return (
     <>
-        <div className="w-full min-h-screen flex flex-col gap-10 p-3">
-          {display}
-        </div>
+      <Auth.Provider value={{setLoggedIn}}>
+        {
+          loggedIn ?
+            <div className="w-full min-h-screen flex flex-col gap-10 p-3">
+              {display}
+            </div>
+          : 
+          <>
+            <Login />
+            <div className="w-full min-h-screen flex flex-col gap-10 p-3">
+              {display}
+            </div>
+          </>
+        }
+      </Auth.Provider>
     </>
   );
 }

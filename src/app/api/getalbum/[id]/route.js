@@ -41,6 +41,12 @@ export async function GET(req, res) {
       for (let i = 0; i < userRanking.length; i++) {
         userRanking[i] = parseInt(userRanking[i]);
       }
+
+      // custom sorting algorithm
+      // negative value means a should come before b
+      // positive value indicates a should come after b
+      // zero indicates a and b are equal
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
       songResults.sort((a, b) => {
         let indexA = userRanking.indexOf(a.track_number);
         let indexB = userRanking.indexOf(b.track_number);
@@ -53,6 +59,11 @@ export async function GET(req, res) {
         defaultSongRanking.push(i);
       }
       userRanking = defaultSongRanking;
+
+      // custom sorting algorithm
+      // negative value means a should come before b
+      // positive value indicates a should come after b
+      // zero indicates a and b are equal
       songResults.sort((a, b) => {
         let indexA = defaultSongRanking.indexOf(a.track_number);
         let indexB = defaultSongRanking.indexOf(b.track_number);

@@ -2,6 +2,7 @@
 import pool from '../../db/pool';
 
 export async function POST(req, res) {
+
   const request = await req.json();
   console.log(request);
 
