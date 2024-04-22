@@ -5,16 +5,19 @@ export async function POST(req, res) {
   const request = await req.json();
 
   // square brackets turn request into an array so map can work :)
-  const songOrder = request.map(song => song.track_number);
+  const songOrder = request[2].map(song => song.track_number);
   let stringSongOrder = songOrder.join(",");
+
+  const album_id = request[0].album_id;
+  const album_rating = request[1];
 
   try {
     const connection = await pool.getConnection();
 
     // get album title, artist, image, and avg album rating
     connection.execute(`
-                    INSERT INTO album_review (songs_ranking)
-                    VALUES ("${stringSongOrder}");
+                    INSERT IGNORE INTO album_review (album_id, album_rating, songs_ranking)
+                    VALUES ("${album_id}", ${album_rating}, "${stringSongOrder}");
                   `);
 
     connection.release();

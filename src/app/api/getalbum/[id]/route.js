@@ -9,7 +9,7 @@ export async function GET(req, res) {
 
     // get album title, artist, image, and avg album rating
     const [albumResults] = await connection.query(`
-                                            SELECT DISTINCT album_title, artist_name, album_image, al.avg_rating
+                                            SELECT DISTINCT album_title, artist_name, album_image, al.avg_rating, al.album_id
                                             FROM albums al, artists ar, album_artists aa, songs s
                                             WHERE al.album_id = aa.album_id
                                             AND al.artist_id = aa.artist_id
