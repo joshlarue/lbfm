@@ -13,12 +13,34 @@ export async function POST(req, res) {
 
   try {
     const connection = await pool.getConnection();
-
-    // get album title, artist, image, and avg album rating
-    connection.execute(`
-                    INSERT IGNORE INTO album_review (album_id, album_rating, songs_ranking)
-                    VALUES ("${album_id}", ${album_rating}, "${stringSongOrder}");
+    
+    let result = await connection.query(`
+                    SELECT album_id FROM album_review
+                    WHERE album_id = '${album_id}';
                   `);
+    console.log(result);
+
+    let reviewExists = false;
+    for (let i = 0; i < result[0].length; i++) {
+      if (result[0][i].album_id == `${album_id}`) {
+        reviewExists = true;
+        break;
+      }
+    }
+
+    if (reviewExists) {
+      connection.execute(`
+                      UPDATE album_review
+                      SET album_rating = ${album_rating}, songs_ranking = "${stringSongOrder}"
+                      WHERE album_id = '${album_id}';
+                      `)
+    } else {
+      connection.execute(`
+                      INSERT INTO album_review (album_id, album_rating, songs_ranking)
+                      VALUES ("${album_id}", ${album_rating}, "${stringSongOrder}");
+                      `);
+    }
+
 
     connection.release();
     return new Response(JSON.stringify(1, {status: 200}));

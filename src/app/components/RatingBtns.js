@@ -2,10 +2,11 @@ import { useState, useEffect, useContext } from "react";
 import { ToSaveContext } from "../albums/[id]/page";
 
 export default function RatingBtns() {
-  const { pressedNumber, setPressedNumber } = useContext(ToSaveContext);
+  const { pressedNumber, setPressedNumber, setSaved } = useContext(ToSaveContext);
   
   const handlePressed = (rating) => {
     setPressedNumber(rating);
+    setSaved(false);
   }
 
   // send rating to backend to be inserted into user review
