@@ -3,13 +3,14 @@ import { useState, useEffect, useContext } from "react";
 import { ToSaveContext } from "../albums/[id]/page";
 
 export default function Songs(props) {
-  const { songOrder, setSongOrder } = useContext(ToSaveContext);
+  const { songOrder, setSongOrder, setSaved } = useContext(ToSaveContext);
 
   // useEffect(() => {
   //   setSongsOrder(props.songs);
   // }, [props.songs]);
   const handleReorder = (e) => {
     setSongOrder(e);
+    setSaved(false);
   }
   return (
     <div className="w-full flex flex-col mt-3">
