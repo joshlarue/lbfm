@@ -11,6 +11,7 @@ export default function Page(albumId) {
   let id = albumId.params.id;
   const [album, setAlbum] = useState({});
   const [songs, setSongs] = useState([]);
+  const [saved, setSaved] = useState();
 
   const [songOrder, setSongOrder] = useState([]);
   const [albumRating, setAlbumRating] = useState();
@@ -34,7 +35,7 @@ export default function Page(albumId) {
 
   return (
     <>
-      <ToSaveContext.Provider value={{ songOrder, setSongOrder, albumRating, setAlbumRating }}>
+      <ToSaveContext.Provider value={{ songOrder, setSongOrder, albumRating, setAlbumRating, saved, setSaved }}>
         <div className="w-full flex flex-col justify-center items-left">
           <div className="w-full flex">
             <div className="flex flex-col w-[60%]">

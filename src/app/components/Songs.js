@@ -3,15 +3,17 @@ import { useState, useEffect, useContext } from "react";
 import { ToSaveContext } from "../albums/[id]/page";
 
 export default function Songs(props) {
-  const { songOrder, setSongsOrder } = useContext(ToSaveContext);
+  const { songOrder, setSongOrder } = useContext(ToSaveContext);
 
   // useEffect(() => {
   //   setSongsOrder(props.songs);
   // }, [props.songs]);
-
+  const handleReorder = (e) => {
+    setSongOrder(e);
+  }
   return (
     <div className="w-full flex flex-col mt-3">
-        <Reorder.Group axis="y" onReorder={setSongsOrder} values={songOrder}>
+        <Reorder.Group axis="y" onReorder={handleReorder} values={songOrder}>
           <div className="w-[75%] flex flex-col gap-1 h-fit">
             {songOrder.map((song) => {
               return (
