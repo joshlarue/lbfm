@@ -8,7 +8,7 @@ DROP TABLE users;
 CREATE TABLE users (
   username VARCHAR(50),
   user_id VARCHAR(128),
-  pass BLOB,
+  password VARCHAR(128),
   email VARCHAR(50),
   phone VARCHAR(10),
   CONSTRAINT pk_user_id PRIMARY KEY (user_id)
