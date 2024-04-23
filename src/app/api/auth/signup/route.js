@@ -24,12 +24,13 @@ export async function POST(req, res) {
 
   const validatePass = () => {
     console.log(password.length);
+    console.log(email, username);
     let validationStatus = new Response(JSON.stringify({data: "validation passed"}), {status: 200});
     if (password.length <= 8 || typeof password == 'undefined' || password == 'password') {
       console.log(password);
       validationStatus = new Response(JSON.stringify({data: "password too short"}), {status: 500});
     }
-    if (typeof username == 'undefined' || typeof email == 'undefined') {
+    if (username == 'undefined' || email == 'undefined') {
         validationStatus = new Response(JSON.stringify({data: "fill out all fields"}), {status: 500});
       }
     return validationStatus;
