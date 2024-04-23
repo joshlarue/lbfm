@@ -1,8 +1,9 @@
 'use client'
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext, useEffect, useContext } from "react";
 import { FormEvent } from 'react';
 import Login from "./loginComponents/login";
 import SignUp from "./loginComponents/signup";
+import { AuthProvider, useAuth } from "../contexts/Auth";
 
 export const UserEntryPageContext = createContext(null);
 
@@ -12,16 +13,12 @@ export default function SignUpForm() {
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
   const [signup, setSignup] = useState(true);
+  const { loggedIn, setLoggedIn } = useAuth;
 
-  const handleUserNameChange = (e) => {
-    setUserName(e.target.value);
-  }
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  }
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  }
+  // get user input
+  const handleUserNameChange = (e) => setUserName(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +44,10 @@ export default function SignUpForm() {
         body: formData,
       });
       const res = await response.json();
-      console.log(res.data);
+      console.log(res.data.data);
+      if (res.data.data === 'authenticated') {
+        setLoggedIn(true);
+      }
 
       if (response.status == 500) {
         setError(true);
@@ -59,7 +59,7 @@ export default function SignUpForm() {
   }
 
   return (
-    <UserEntryPageContext.Provider value={{handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setSignup, signup, error }}>
+    <UserEntryPageContext.Provider value={{ handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setSignup, signup, error }}>
       {signup ? 
         <SignUp />
       :
