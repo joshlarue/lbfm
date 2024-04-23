@@ -1,29 +1,62 @@
-import { serialize } from 'cookie'
-import { isAuthenticated } from '@/app/Auth';
-import { NextApiRequest, NextApiResponse } from 'next'
+'use server'
+import bcrypt from 'bcrypt';
+import pool from '../../../db/pool';
+import sha256 from 'sha256';
 
-export default async function handler(req, res) {
-  const session = await getSession(req)
+export async function POST(req, res) {
+  const formData = await req.formData();
+  const connection = await pool.getConnection();
 
-  const request = await req.body.json();
-  const pass = request.split("&password=")[2];
-  const email = request.split("email=").split("&")[1];
+  const username = formData.get("username");
+  const user_id = sha256(username);
+  const password = formData.get("password");
 
-  if (pass === "hello" && email == "guest@jahsauce.cloud") {
-    const sessionData = req.body;
-    const encryptedSessionData = encrypt(sessionData);
-  
-    const cookie = serialize('session', encryptedSessionData, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7, // One week
-      path: '/',
-    });
-    isAuthenticated = true;
-    res.setHeader('Set-Cookie', cookie);
-    res.status(200).json({ message: 'Successfully set cookie!' });
-    console.log("yessir");
-  } else {
-    res.status(403);
+  try {
+    let queryUser = await connection.query(`
+                                          SELECT DISTINCT password FROM users
+                                          WHERE user_id = '${user_id}';
+                                          `);
+    const queryPassword = queryUser[0][0]['password'];
+
+    const passwordAuthenticated = () => {
+      let isAuth;
+      bcrypt.compare(password, queryPassword, (err, result) => {
+        if (result === true) {
+          console.log("Password matches DB");
+          isAuth = true;
+        } else {
+          console.log(err);
+          isAuth = false;
+        }
+      });
+      return isAuth;
+    }
+
+    if (() => passwordAuthenticated()) {
+      console.log("Authed");
+      return new Response(
+        JSON.stringify({ data: "authenticated" }),
+        {
+          status: 200,
+        }
+      );
+    } else {
+      return new Response(
+        JSON.stringify({ data: "inauthenticated" }),
+        {
+          status: 500,
+        }
+      );
+    }
+  } catch (error) {
+    console.error("Error logging in", error);
+    return new Response(
+      JSON.stringify({ data: "error logging in" }),
+      {
+        status: 500,
+      }
+    );
+  } finally {
+    connection.release();
   }
-  
 }
