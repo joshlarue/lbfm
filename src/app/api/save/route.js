@@ -5,6 +5,7 @@ export async function POST(req, res) {
 
   const request = await req.json();
   console.log(request);
+  const user_id = request[3];
 
   // square brackets turn request into an array so map can work :)
   const stringSongOrder = request[2].join(",");
@@ -16,8 +17,9 @@ export async function POST(req, res) {
     const connection = await pool.getConnection();
     
     let result = await connection.query(`
-                    SELECT album_id FROM album_review
-                    WHERE album_id = '${album_id}';
+                    SELECT album_id FROM album_reviews
+                    WHERE album_id = '${album_id}'
+                    AND user_id = '${user_id}';
                   `);
     console.log(result);
 
@@ -31,14 +33,15 @@ export async function POST(req, res) {
 
     if (reviewExists) {
       connection.execute(`
-                      UPDATE album_review
+                      UPDATE album_reviews
                       SET album_rating = ${album_rating}, songs_ranking = "${stringSongOrder}"
-                      WHERE album_id = '${album_id}';
+                      WHERE album_id = '${album_id}'
+                      AND user_id = '${user_id}';
                       `)
     } else {
       connection.execute(`
-                      INSERT INTO album_review (album_id, album_rating, songs_ranking)
-                      VALUES ("${album_id}", ${album_rating}, "${stringSongOrder}");
+                      INSERT INTO album_reviews (album_id, album_rating, songs_ranking, user_id)
+                      VALUES ("${album_id}", ${album_rating}, "${stringSongOrder}", '${user_id}');
                       `);
     }
 
@@ -46,7 +49,7 @@ export async function POST(req, res) {
     connection.release();
     return new Response(JSON.stringify(1, {status: 200}));
   } catch (error) {
-    console.error("Error fetching albums", error);
+    console.error("Error saving albums", error);
     return new Response({status: 500});
   }
 }

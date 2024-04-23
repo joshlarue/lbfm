@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { ToSaveContext } from "../albums/[id]/page";
 
 export default function RatingBtns() {
-  const { pressedNumber, setPressedNumber, setSaved } = useContext(ToSaveContext);
+  const { pressedNumber, setPressedNumber, setSaved, albumRating } = useContext(ToSaveContext);
   
   const handlePressed = (rating) => {
     setPressedNumber(rating);

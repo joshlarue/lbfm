@@ -4,6 +4,7 @@ import Album from "@/app/components/Album";
 import { useState, useEffect, createContext } from "react";
 import RatingBtns from "@/app/components/RatingBtns";
 import SaveReviewBtn from "@/app/components/SaveReviewBtn";
+import { useAuth } from "@/app/contexts/Auth";
 
 export const ToSaveContext = createContext(null);
 
@@ -16,19 +17,23 @@ export default function Page(albumId) {
   const [songs, setSongs] = useState([])
   const [songOrder, setSongOrder] = useState([]);
   const [albumRating, setAlbumRating] = useState();
+  const { userId } = useAuth();
 
   // use album ID to populate album page
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/getalbum/'+id, {method: "GET"});
+        let formData = new FormData();
+        formData.append("userId", userId);
+        const response = await fetch('http://localhost:3000/api/getalbum/'+id, {method: "POST", body: formData});
         const responseData = await response.json();
         console.log(responseData);
 
         setAlbum(responseData[0][0]);
         setSongs(responseData[1]);
         setSongOrder(responseData[2]);
-
+        console.log(responseData[3][0].album_rating);
+        setAlbumRating(responseData[3][0].album_rating);
       } catch (error) {
         console.error("Error fetching albums: " + error);
       }
@@ -38,13 +43,12 @@ export default function Page(albumId) {
 
   return (
     <>
-      <ToSaveContext.Provider value={{ album, songs, setSongs, songOrder, setSongOrder, albumRating, setAlbumRating, saved, setSaved, pressedNumber, setPressedNumber }}>
+      <ToSaveContext.Provider value={{ album, songs, setSongs, songOrder, setSongOrder, albumRating, setAlbumRating, saved, setSaved, pressedNumber, setPressedNumber, albumRating }}>
         <div className="w-full flex flex-col justify-center items-left">
           <div className="w-full flex">
             <div className="flex flex-col w-[60%]">
               <div className="p-3 flex flex-col gap-1">
                 <p className="text-lg font-bold">community rating: <span className="text-accent">{album.avg_rating}</span></p>
-                {/* <Stars numStars={album.avg_rating} width={25} gap={1.5} /> */}
               </div>
               <Album album={album} />
 

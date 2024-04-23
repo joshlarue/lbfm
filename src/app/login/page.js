@@ -6,6 +6,7 @@ import SignupComponent from "./loginComponents/SignupComponent";
 import { useAuth } from "../contexts/Auth";
 import { redirect } from "next/navigation"; 
 import { useRouter } from 'next/router';
+import sha256 from "sha256";
 
 export const UserEntryPageContext = createContext(null);
 
@@ -15,7 +16,7 @@ export default function SignUpForm() {
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
   const [loginPage, setLoginPage] = useState(true);
-  const { loggedIn, setLoggedIn } = useAuth();
+  const { loggedIn, setLoggedIn, setUserId } = useAuth();
 
   if (loggedIn) {
     redirect("http://localhost:3000/");
@@ -29,6 +30,8 @@ export default function SignUpForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let formData = new FormData();
+    console.log(sha256(username));
+    setUserId(sha256(username));
     formData.append("username", username);
     formData.append("email", email);
     formData.append("password", password);

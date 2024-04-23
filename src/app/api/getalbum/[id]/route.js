@@ -1,9 +1,11 @@
 'use server'
 import pool from '../../../db/pool';
 
-export async function GET(req, res) {
+export async function POST(req, res) {
   // get the id of album from slug
   let albumId = req.url.split('/')[req.url.split('/').length-1];
+  const formData = await req.formData();
+  const user_id = formData.get("userId");
   try {
     const connection = await pool.getConnection();
 
@@ -19,9 +21,14 @@ export async function GET(req, res) {
                                             `);
     // will have to change to select by user
     const [userRankingDB] = await connection.query(`
-                                              SELECT songs_ranking from album_review
+                                              SELECT songs_ranking from album_reviews
                                               WHERE album_id = '${albumId}'
-                                              ;`);
+                                              AND user_id = '${user_id}';`);
+
+    const [userAlbumRatingDB] = await connection.query(`
+                                                SELECT album_rating from album_reviews
+                                                WHERE album_id = '${albumId}'
+                                                AND user_id = '${user_id}';`);
 
 
 
@@ -72,7 +79,7 @@ export async function GET(req, res) {
     }
 
     connection.release();
-    return new Response(JSON.stringify([albumResults, songResults, userRanking]), {status: 200});
+    return new Response(JSON.stringify([albumResults, songResults, userRanking, userAlbumRatingDB]), {status: 200});
   } catch (error) {
     console.error("Error fetching albums", error);
     return new Response({status: 500});
