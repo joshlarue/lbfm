@@ -1,9 +1,11 @@
 'use client'
 import { useState, createContext, useEffect, useContext } from "react";
 import { FormEvent } from 'react';
-import Login from "./loginComponents/login";
-import SignUp from "./loginComponents/signup";
-import { AuthProvider, useAuth } from "../contexts/Auth";
+import LoginComponent from "./loginComponents/LoginComponent";
+import SignupComponent from "./loginComponents/SignupComponent";
+import { useAuth } from "../contexts/Auth";
+import { redirect } from "next/navigation"; 
+import { useRouter } from 'next/router';
 
 export const UserEntryPageContext = createContext(null);
 
@@ -12,8 +14,12 @@ export default function SignUpForm() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
-  const [signup, setSignup] = useState(true);
-  const { loggedIn, setLoggedIn } = useAuth;
+  const [loginPage, setLoginPage] = useState(true);
+  const { loggedIn, setLoggedIn } = useAuth();
+
+  if (loggedIn) {
+    redirect("http://localhost:3000/");
+  }
 
   // get user input
   const handleUserNameChange = (e) => setUserName(e.target.value);
@@ -26,8 +32,8 @@ export default function SignUpForm() {
     formData.append("username", username);
     formData.append("email", email);
     formData.append("password", password);
-    if (signup) {
-      const response = await fetch('http://localhost:3000/api/auth/signup', {
+    if (loginPage) {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         body: formData,
       });
@@ -36,10 +42,12 @@ export default function SignUpForm() {
       if (response.status == 500) {
         setError(true);
       } else {
+        setLoggedIn(true);
+        redirect("http://localhost:3000");
         setError(false);
       }
     } else {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch('http://localhost:3000/api/auth/signup', {
         method: 'POST',
         body: formData,
       });
@@ -59,11 +67,11 @@ export default function SignUpForm() {
   }
 
   return (
-    <UserEntryPageContext.Provider value={{ handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setSignup, signup, error }}>
-      {signup ? 
-        <SignUp />
+    <UserEntryPageContext.Provider value={{ handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setLoginPage, setLoggedIn, error }}>
+      {loginPage ? 
+        <LoginComponent />
       :
-        <Login />
+        <SignupComponent />
       }
     </UserEntryPageContext.Provider>
   )

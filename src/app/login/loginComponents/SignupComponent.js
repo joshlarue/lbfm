@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UserEntryPageContext } from "../page";
 
-export default function Login() {
-  const { handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setSignup, error, signup } = useContext(UserEntryPageContext);
+export default function Signup() {
+  const { handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setLoginPage, error } = useContext(UserEntryPageContext);
 
   return (
     <div className="w-full h-[75vh] flex flex-col justify-center items-end gap-10 pr-[5vw]">
@@ -22,7 +22,7 @@ export default function Login() {
         </div>
         <button className="bg-secondary px-4 py-2 text-base font-bold rounded-md shadow-md" type="submit">sign up</button>
       </form>
-      <button onClick={() => setSignup(false)} className="bg-base-dark px-4 py-2 text-primary-light font-bold rounded-md shadow-md text-xs">log in instead</button>
+      <button onClick={() => setLoginPage(true)} className="bg-base-dark px-4 py-2 text-primary-light font-bold rounded-md shadow-md text-xs">log in instead</button>
 
       {error?<div className="flex flex-col justify-center items-center bg-accent text-base font-bold p-2 rounded-md gap-3 shadow-md"><p className="text-right w-[75vw]">user exists or your input is invalid</p><p className="text-right w-[75vw] ">please ensure your password is over ten characters long</p></div>:null}
     </div>

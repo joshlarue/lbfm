@@ -2,13 +2,19 @@
 import { useEffect, useState, useLayoutEffect, createContext } from "react";
 import Carousel from "./components/Carousel";
 import Image from "next/image";
-import { redirect } from "next/navigation";
-import Login from "./components/Login";
+import { redirect } from "next/navigation"; 
+import { AuthProvider, useAuth } from "./contexts/Auth";
 
 export default function Home() {
   const [albums, setAlbums] = useState([]);
   const [display, setDisplay] = useState([]);
+  const { loggedIn } = useAuth();
+
   useEffect(() => {
+    if (!loggedIn) {
+      redirect('http://localhost:3000/login');
+    }
+
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:3000/api/populatecarousel', {method: "GET"});
@@ -18,9 +24,6 @@ export default function Home() {
         let firstCarouselData = responseData.slice(0, 7);
         let secondCarouselData = responseData.slice(7, 14);
         let thirdCarouselData = responseData.slice(14, 21);
-        console.log(firstCarouselData);
-        console.log(secondCarouselData);
-        console.log(thirdCarouselData);
         
         setDisplay(
           <>
@@ -41,16 +44,9 @@ export default function Home() {
 
   return (
     <>
-      {
-        loggedIn ?
-          <div className="w-full min-h-screen flex flex-col gap-10 p-3">
-            {display}
-          </div>
-        : 
-        <>
-          <Login />
-        </>
-      }
+      <div className="w-full min-h-screen flex flex-col gap-10 p-3">
+        {display}
+      </div>
     </>
   );
 }

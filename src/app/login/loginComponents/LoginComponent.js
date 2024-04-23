@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UserEntryPageContext } from "../page";
 
-export default function signup() {
-  const { handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setSignup, error } = useContext(UserEntryPageContext);
+export default function Login() {
+  const { handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setLoginPage, error } = useContext(UserEntryPageContext);
   return (
     <div className="w-full h-[75vh] flex flex-col justify-center items-end gap-10 pr-[5vw]">
       <h1 className="text-lg font-bold text-base-dark bg-primary-light rounded-md p-3 shadow-md">log in to your LBFM account</h1>
@@ -21,7 +21,7 @@ export default function signup() {
         </div>
         <button className="bg-secondary px-4 py-2 text-base font-bold rounded-md shadow-md" type="submit">log in</button>
       </form>
-      <button onClick={() => setSignup(true)} className="bg-base-dark text-primary-light px-4 py-2 font-bold rounded-md shadow-md text-xs">sign up instead</button>
+      <button onClick={() => setLoginPage(false)} className="bg-base-dark text-primary-light px-4 py-2 font-bold rounded-md shadow-md text-xs">sign up instead</button>
       {error?<div className="flex flex-col justify-center items-center bg-accent text-base font-bold p-2 rounded-md gap-3 shadow-md"><p className="text-right w-[75vw]">user exists or your input is invalid</p><p className="text-right w-[75vw] ">please ensure your password is over ten characters long</p></div>:null}
     </div>
   );
