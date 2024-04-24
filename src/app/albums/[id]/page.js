@@ -33,7 +33,7 @@ export default function Page(albumId) {
         setSongs(responseData[1]);
         setSongOrder(responseData[2]);
         console.log(responseData[3][0].album_rating);
-        setAlbumRating(responseData[3][0].album_rating);
+        setPressedNumber(responseData[3][0].album_rating);
       } catch (error) {
         console.error("Error fetching albums: " + error);
       }
