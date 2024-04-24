@@ -5,8 +5,9 @@ import LoginComponent from "./loginComponents/LoginComponent";
 import SignupComponent from "./loginComponents/SignupComponent";
 import { useAuth } from "../contexts/Auth";
 import { redirect } from "next/navigation"; 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import sha256 from "sha256";
+import Cookies from "js-cookie";
 
 export const UserEntryPageContext = createContext(null);
 
@@ -18,8 +19,9 @@ export default function SignUpForm() {
   const [loginPage, setLoginPage] = useState(true);
   const { loggedIn, setLoggedIn, setUserId } = useAuth();
 
-  if (loggedIn) {
-    redirect("http://localhost:3000/");
+  const router = useRouter();
+  if (Cookies.get('user_id')) {
+    router.push("http://localhost:3000/");
   }
 
   // get user input
@@ -31,7 +33,7 @@ export default function SignUpForm() {
     e.preventDefault();
     let formData = new FormData();
     console.log(sha256(username));
-    setUserId(sha256(username));
+    // setUserId(sha256(username));
     formData.append("username", username);
     formData.append("email", email);
     formData.append("password", password);
@@ -45,8 +47,9 @@ export default function SignUpForm() {
       if (response.status == 500) {
         setError(true);
       } else {
-        setLoggedIn(true);
-        redirect("http://localhost:3000");
+        // setLoggedIn(true);
+        Cookies.set('user_id', sha256(username));
+        router.push("http://localhost:3000");
         setError(false);
       }
     } else {
@@ -55,15 +58,14 @@ export default function SignUpForm() {
         body: formData,
       });
       const res = await response.json();
-      console.log(res.data.data);
-      if (res.data.data === 'authenticated') {
-        setLoggedIn(true);
-      }
+      console.log("res" + res.data.data);
+      Cookies.set('user_id', sha256(username));
 
       if (response.status == 500) {
         setError(true);
       } else {
         setError(false);
+        router.push("http://localhost:3000/");
       }
     }
 

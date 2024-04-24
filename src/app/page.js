@@ -4,15 +4,19 @@ import Carousel from "./components/Carousel";
 import Image from "next/image";
 import { redirect } from "next/navigation"; 
 import { AuthProvider, useAuth } from "./contexts/Auth";
+import { parseCookies } from "./actions/parseCookies";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const [albums, setAlbums] = useState([]);
   const [display, setDisplay] = useState([]);
   const { loggedIn } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    if (!loggedIn) {
-      redirect('http://localhost:3000/login');
+    if (!Cookies.get('user_id')) {
+      router.push('http://localhost:3000/login');
     }
 
     const fetchData = async () => {
@@ -42,10 +46,15 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const handleLogOut = () => {
+    Cookies.remove('user_id');
+    router.push('/login');
+  }
   return (
     <>
       <div className="w-full min-h-screen flex flex-col gap-10 p-3">
         {display}
+        <button onClick={handleLogOut} className="p-2 bg-base-dark font-bold text-primary-light">log out</button>
       </div>
     </>
   );

@@ -7,7 +7,7 @@ export default function Header() {
     <>
       <header className="w-full h-[15vh] flex justify-center items-center">
         <div className="flex h-[80%] w-[90%] justify-between">
-          <Link href={'/'} className="flex justify-center items-center">logo</Link>
+          <Link href={'/'} className="flex justify-center items-center text-3xl font-extrabold"><span className='text-primary-light'>LB</span><span className='text-accent'>FM</span></Link>
           <div className="flex flex-col justify-center items-end gap-3">
             <Link href={'/search'} className='w-full h-7 bg-primary-light rounded-full flex justify-end pr-3'>
                 <Image src={search} />

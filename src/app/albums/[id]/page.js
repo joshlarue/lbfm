@@ -5,6 +5,7 @@ import { useState, useEffect, createContext } from "react";
 import RatingBtns from "@/app/components/RatingBtns";
 import SaveReviewBtn from "@/app/components/SaveReviewBtn";
 import { useAuth } from "@/app/contexts/Auth";
+import Cookies from "js-cookie";
 
 export const ToSaveContext = createContext(null);
 
@@ -17,7 +18,7 @@ export default function Page(albumId) {
   const [songs, setSongs] = useState([])
   const [songOrder, setSongOrder] = useState([]);
   const [albumRating, setAlbumRating] = useState();
-  const { userId } = useAuth();
+  const userId = Cookies.get('user_id');
 
   // use album ID to populate album page
   useEffect(() => {
