@@ -59,12 +59,12 @@ export default function SignUpForm() {
       });
       const res = await response.json();
       console.log("res" + res.data.data);
-      Cookies.set('user_id', sha256(username));
 
       if (response.status == 500) {
         setError(true);
       } else {
         setError(false);
+        Cookies.set('user_id', sha256(username));
         router.push("http://localhost:3000/");
       }
     }
