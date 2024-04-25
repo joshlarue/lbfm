@@ -26,12 +26,12 @@ export async function POST(req, res) {
     console.log(password.length);
     console.log(email, username);
     let validationStatus = new Response(JSON.stringify({data: "validation passed"}), {status: 200});
-    if (password.length <= 8 || typeof password == 'undefined' || password == 'password') {
+    if (password.length < 8 || typeof password == 'undefined' || password == 'password') {
       console.log(password);
       validationStatus = new Response(JSON.stringify({data: "password too short"}), {status: 500});
     }
     if (username == 'undefined' || email == 'undefined') {
-        validationStatus = new Response(JSON.stringify({data: "fill out all fields"}), {status: 500});
+        validationStatus = new Response(JSON.stringify({data: "fields undefined"}), {status: 500});
       }
     return validationStatus;
   }
@@ -41,10 +41,11 @@ export async function POST(req, res) {
 
   const createUser = async () => {
     let userResponse = new Response(JSON.stringify({data: "user successfully created"}), {status: 200});
-    if (passValidated.status === 500 && passResponse.data == 'password too short') {
-      userResponse = new Response(JSON.stringify({data: "password too short"}, {status: 500}));
+    if (passValidated.status === 500 && passResponse.data == "password too short") {
+      userResponse = new Response(JSON.stringify({data: "password too short"}), {status: 500});
+      console.log(userResponse);
     } else if (passValidated.status === 500 && passResponse.data == 'fields undefined') {
-      userResponse = new Response(JSON.stringify({data: "fields undefined"}, {status: 500}));
+      userResponse = new Response(JSON.stringify({data: "fields undefined"}), {status: 500});
     } else {
       // call DB to create a user
       try {

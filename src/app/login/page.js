@@ -59,15 +59,17 @@ export default function SignUpForm() {
       });
       const res = await response.json();
       console.log(res);
+      console.log(response.status);
       console.log("res" + res.data.data);
 
       if (response.status === 500 && res.data.data == 'user already exists') {
-        setError('username already exists. try another one!');
-
+        setError('that username or email is already in use. try another one!');
       } else if (response.status === 500 && res.data.data == 'error creating user') {
         setError("unknown error occured. probably josh's fault.");
       } else if (response.status === 500 && res.data.data == 'fields undefined') {
         setError("please fill out all fields!");
+      } else if (response.status === 500 && res.data.data == 'password too short') {
+        setError("please make your password at least eight characters long!")
       } else {
         setError('');
         Cookies.set('user_id', sha256(username));

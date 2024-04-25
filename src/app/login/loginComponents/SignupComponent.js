@@ -24,7 +24,7 @@ export default function Signup() {
       </form>
       <button onClick={() => setLoginPage(true)} className="bg-base-dark px-4 py-2 text-primary-light font-bold rounded-md shadow-md text-xs">log in instead</button>
 
-      {error != '' ?<div className="flex flex-col justify-center items-center bg-accent text-base font-bold p-2 rounded-md gap-3 shadow-md"><p className="text-right w-[75vw]">{error}</p><p className="text-right w-[75vw] ">please ensure your password is over ten characters long</p></div>:null}
+      {error != '' ?<div className="flex flex-col justify-center items-center bg-accent text-base font-bold p-2 rounded-md gap-3 shadow-md"><p className="text-right w-[75vw]">{error}</p></div>:null}
     </div>
   );
 }
