@@ -27,7 +27,8 @@ export async function POST(req, res) {
           } else if (result === true) {
             console.log("Password matches DB");
             resolve(true);
-          } else {
+          } else if (result === false) {
+            console.log(result);
             console.log("Password does not match DB");
             resolve(false);
           }
@@ -36,12 +37,19 @@ export async function POST(req, res) {
     }
 
     const auth = async () => {
+      let authResponse = new Response(
+        JSON.stringify({ data: "inauthenticated" }),
+        {
+          status: 500,
+        }
+      );
       try {
         const isAuth = await passwordAuthenticated();
+        console.log(isAuth);
         if (isAuth) {
           console.log("Authed");
           connection.release();
-          return new Response(
+          authResponse = new Response(
             JSON.stringify({ data: "authenticated" }),
             {
               status: 200,
@@ -49,22 +57,24 @@ export async function POST(req, res) {
           );
         } else {
           connection.release();
-          return new Response(
+          authResponse = new Response(
             JSON.stringify({ data: "inauthenticated" }),
             {
               status: 500,
             }
           );
         }
+        return authResponse;
       } catch (e) {
         console.error("Error during password authentication");
         connection.release();
-        return new Response(
+        authResponse = Response(
           JSON.stringify({ data: "error during authentication" }),
           {
             status: 500,
           }
         );
+        return authResponse;
       }
     }
 
@@ -73,7 +83,7 @@ export async function POST(req, res) {
     return new Response(
       JSON.stringify({ data: await response.json() }),
       {
-        status: 200,
+        status: response.status,
       }
     );
     

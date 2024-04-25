@@ -43,14 +43,14 @@ export default function SignUpForm() {
         body: formData,
       });
       const res = await response.json();
-      console.log(res.data);
-      if (response.status == 500) {
-        setError(true);
+      console.log(res.data.data);
+      if (response.status === 500 && res.data.data == 'inauthenticated') {
+        setError('your username or password is incorrect :( please try again!');
       } else {
         // setLoggedIn(true);
         Cookies.set('user_id', sha256(username));
         router.push("http://localhost:3000");
-        setError(false);
+        setError('');
       }
     } else {
       const response = await fetch('http://localhost:3000/api/auth/signup', {
@@ -58,12 +58,18 @@ export default function SignUpForm() {
         body: formData,
       });
       const res = await response.json();
+      console.log(res);
       console.log("res" + res.data.data);
 
-      if (response.status == 500) {
-        setError(true);
+      if (response.status === 500 && res.data.data == 'user already exists') {
+        setError('username already exists. try another one!');
+
+      } else if (response.status === 500 && res.data.data == 'error creating user') {
+        setError("unknown error occured. probably josh's fault.");
+      } else if (response.status === 500 && res.data.data == 'fields undefined') {
+        setError("please fill out all fields!");
       } else {
-        setError(false);
+        setError('');
         Cookies.set('user_id', sha256(username));
         router.push("http://localhost:3000/");
       }

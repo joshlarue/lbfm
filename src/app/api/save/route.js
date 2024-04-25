@@ -44,11 +44,10 @@ export async function POST(req, res) {
                       VALUES ("${album_id}", ${album_rating}, "${stringSongOrder}", '${user_id}');
                       `);
     }
-
-
     connection.release();
     return new Response(JSON.stringify(1, {status: 200}));
   } catch (error) {
+    connection.release();
     console.error("Error saving albums", error);
     return new Response({status: 500});
   }

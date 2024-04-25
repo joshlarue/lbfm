@@ -12,17 +12,13 @@ export default function Login() {
           <input onChange={handleUserNameChange} className="bg-base-dark p-2 shadow-sm rounded-md" id="username" name="username" placeholder="username" />
         </div>
         <div className="flex flex-col gap-1">
-          {/* <label className="text-primary-light" htmlFor="email">email</label> */}
-          <input onChange={handleEmailChange} className="bg-base-dark p-2 shadow-sm rounded-md" id="email" name="email" type="email" placeholder="email" />
-        </div>
-        <div className="flex flex-col gap-1">
           {/* <label htmlFor="password" className="text-primary-light">password</label> */}
           <input onChange={handlePasswordChange} className="bg-base-dark p-2 shadow-sm rounded-md" id="password" name="password" type="password" placeholder="password"/>
         </div>
         <button className="bg-secondary px-4 py-2 text-base font-bold rounded-md shadow-md" type="submit">log in</button>
       </form>
       <button onClick={() => setLoginPage(false)} className="bg-base-dark text-primary-light px-4 py-2 font-bold rounded-md shadow-md text-xs">sign up instead</button>
-      {error?<div className="flex flex-col justify-center items-center bg-accent text-base font-bold p-2 rounded-md gap-3 shadow-md"><p className="text-right w-[75vw]">user exists or your input is invalid</p><p className="text-right w-[75vw] ">please ensure your password is over ten characters long</p></div>:null}
+      {error != '' ?<div className="flex flex-col justify-center items-center bg-accent text-base font-bold p-2 rounded-md gap-3 shadow-md"><p className="text-right w-[75vw]">{error}</p></div>:null}
     </div>
   );
 }

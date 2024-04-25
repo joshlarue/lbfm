@@ -37,12 +37,14 @@ export async function POST(req, res) {
   }
 
   const passValidated = validatePass();
-  console.log(passValidated.status);
+  const passResponse = await passValidated.json();
 
   const createUser = async () => {
-    let userResponse = new Response(JSON.stringify({data: "User successfully created"}), {status: 200});
-    if (passValidated.status === 500) {
-      userResponse = new Response(JSON.stringify({data: "Password validation failed"}, {status: 500}));
+    let userResponse = new Response(JSON.stringify({data: "user successfully created"}), {status: 200});
+    if (passValidated.status === 500 && passResponse.data == 'password too short') {
+      userResponse = new Response(JSON.stringify({data: "password too short"}, {status: 500}));
+    } else if (passValidated.status === 500 && passResponse.data == 'fields undefined') {
+      userResponse = new Response(JSON.stringify({data: "fields undefined"}, {status: 500}));
     } else {
       // call DB to create a user
       try {
@@ -55,7 +57,7 @@ export async function POST(req, res) {
                                                 `);
 
         if (findUserExists(userList)) {
-          userResponse = new Response(JSON.stringify({data: "User already exists"}), {status: 500});
+          userResponse = new Response(JSON.stringify({data: "user already exists"}), {status: 500});
         } else {
           let result = await connection.query(`
                                           INSERT INTO users (user_id, password, username, email)
@@ -67,7 +69,7 @@ export async function POST(req, res) {
         }
       } catch (error) {
         console.error("Error creating user", error);
-        userResponse = new Response(JSON.stringify({data: "Error creating user"}), {status: 500});
+        userResponse = new Response(JSON.stringify({data: "error creating user"}), {status: 500});
       }
     }
     return userResponse;
