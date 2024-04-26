@@ -46,7 +46,10 @@ export default function SignUpForm() {
       console.log(res.data.data);
       if (response.status === 500 && res.data.data == 'inauthenticated') {
         setError('your username or password is incorrect :( please try again!');
-      } else {
+      } else if (response.status === 500 && res.data.data == 'error logging in    ') {
+        setError("unknown error occured. probably josh's fault.");
+      }
+      else {
         // setLoggedIn(true);
         Cookies.set('user_id', sha256(username));
         router.push("http://localhost:3000");
