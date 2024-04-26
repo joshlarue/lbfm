@@ -21,7 +21,7 @@ export default function SignUpForm() {
 
   const router = useRouter();
   if (Cookies.get('user_id')) {
-    router.push("http://localhost:3000/");
+    router.push("https://lbfm.jahsauce.cloud/");
   }
 
   // get user input
@@ -52,7 +52,7 @@ export default function SignUpForm() {
       else {
         // setLoggedIn(true);
         Cookies.set('user_id', sha256(username));
-        router.push("http://localhost:3000");
+        router.push("https://lbfm.jahsauce.cloud/");
         setError('');
       }
     } else {
@@ -76,7 +76,7 @@ export default function SignUpForm() {
       } else {
         setError('');
         Cookies.set('user_id', sha256(username));
-        router.push("http://localhost:3000/");
+        router.push("https://lbfm.jahsauce.cloud/");
       }
     }
 
