@@ -22,6 +22,7 @@ export default function SignUpForm() {
   const router = useRouter();
   if (Cookies.get('user_id')) {
     router.push("https://lbfm.jahsauce.cloud/");
+    router.push("https://lbfm.jahsauce.cloud/");
   }
 
   // get user input
@@ -38,7 +39,7 @@ export default function SignUpForm() {
     formData.append("email", email);
     formData.append("password", password);
     if (loginPage) {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch('https://lbfm.jahsauce.cloud/api/auth/login', {
         method: 'POST',
         body: formData,
       });
@@ -56,7 +57,7 @@ export default function SignUpForm() {
         setError('');
       }
     } else {
-      const response = await fetch('http://localhost:3000/api/auth/signup', {
+      const response = await fetch('https://lbfm.jahsauce.cloud/api/auth/signup', {
         method: 'POST',
         body: formData,
       });
