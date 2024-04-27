@@ -43,11 +43,13 @@ export default function SignUpForm() {
         body: formData,
       });
       const res = await response.json();
-      console.log(res.data.data);
+      console.log(res.data);
       if (response.status === 500 && res.data.data == 'inauthenticated') {
         setError('your username or password is incorrect :( please try again!');
-      } else if (response.status === 500 && res.data.data == 'error logging in    ') {
+      } else if (response.status === 500 && res.data.data == 'error logging in') {
         setError("unknown error occured. probably josh's fault.");
+      } else if (response.status === 500 && res.data == 'user not found') {
+        setError("that account does not exist!");
       }
       else {
         // setLoggedIn(true);
