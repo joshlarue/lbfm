@@ -10,6 +10,7 @@ export async function POST(req, res) {
   const username = formData.get("username");
   const user_id = sha256(username);
   const password = formData.get("password");
+  console.log('password is', password);
 
   try {
     let frontEndResponse;
