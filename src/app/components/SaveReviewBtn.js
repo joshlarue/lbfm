@@ -11,7 +11,7 @@ export default function SaveReviewBtn() {
 
   const handleSaved = async () => {
     setSaved(true);
-    await fetch('http://localhost:3000/api/save', {method: "POST", body: JSON.stringify([album, pressedNumber, songOrder, userId])});
+    await fetch('https://lbfm.jahsauce.cloud/api/save', {method: "POST", body: JSON.stringify([album, pressedNumber, songOrder, userId])});
   }
 
   return (
