@@ -21,7 +21,7 @@ export default function Header() {
               </button>
               <button className="flex justify-center items-center bg-secondary text-base font-bold rounded-lg px-3 py-1">
                 <Link href={'/songs'}>songs</Link>
-              </button>
+                </button>
             </div>
           </div>
         </div>
