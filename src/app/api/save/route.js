@@ -34,14 +34,14 @@ export async function POST(req, res) {
     if (reviewExists) {
       connection.execute(`
                       UPDATE album_reviews
-                      SET album_rating = ${album_rating}, songs_ranking = "${stringSongOrder}"
+                      SET album_rating = ${album_rating}, songs_ranking = '${stringSongOrder}'
                       WHERE album_id = '${album_id}'
                       AND user_id = '${user_id}';
                       `)
     } else {
       connection.execute(`
                       INSERT INTO album_reviews (album_id, album_rating, songs_ranking, user_id)
-                      VALUES ("${album_id}", ${album_rating}, "${stringSongOrder}", '${user_id}');
+                      VALUES ('${album_id}', ${album_rating}, '${stringSongOrder}', '${user_id}');
                       `);
     }
     connection.release();
