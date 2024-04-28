@@ -3,6 +3,7 @@ DROP TABLE songs;
 DROP TABLE album_artists;
 DROP TABLE albums;
 DROP TABLE artists;
+DROP TABLE user_relationships;
 DROP TABLE users;
 
 CREATE TABLE users (
@@ -12,6 +13,13 @@ CREATE TABLE users (
   email VARCHAR(50),
   phone VARCHAR(10),
   CONSTRAINT pk_user_id PRIMARY KEY (user_id)
+);
+
+CREATE TABLE user_relationships (
+  user_id_1 VARCHAR(128),
+  user_id_2 VARCHAR(128),
+  FOREIGN KEY (user_id_1) REFERENCES users(user_id),
+  FOREIGN KEY (user_id_2) REFERENCES users(user_id)
 );
 
 CREATE TABLE artists (
