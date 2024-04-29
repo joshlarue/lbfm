@@ -1,8 +1,10 @@
 'use server'
+import { Cookies } from 'js-cookie';
 import pool from '../../db/pool';
 import 'fs-extra';
 
 export async function GET(req, res) {
+  const user_id = Cookies.get('user_id');
   try {
     const connection = await pool.getConnection();
     const [results] = await connection.query(`SELECT DISTINCT album_title, artist_name, album_image, al.avg_rating, album_id 

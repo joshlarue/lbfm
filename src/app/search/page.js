@@ -42,7 +42,7 @@ export default function Search() {
   );
 }
 
-// get user profile pics up in here
+// TODO: get user profile pics up in here
 function User({user, numRatings}) {
   return (
     <div className="p-3 bg-base-dark w-full flex justify-end rounded-l-lg font-bold">
