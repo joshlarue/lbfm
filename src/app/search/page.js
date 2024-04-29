@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import search from '../assets/search.svg';
 import Image from "next/image";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Search() {
   const [userDisplay, setUserDisplay] = useState();
@@ -45,7 +46,7 @@ export default function Search() {
 // TODO: get user profile pics up in here
 function User({user, numRatings}) {
   return (
-    <div className="p-3 bg-base-dark w-full flex justify-end rounded-l-lg font-bold">
+    <Link href={'/user/'+user} className="p-3 bg-base-dark w-full flex justify-end rounded-l-lg font-bold">
       <div className="w-full justify-between flex">
         <div className="flex font-normal">
           <span className="pr-1"># of albums rated:</span>
@@ -55,6 +56,6 @@ function User({user, numRatings}) {
           {user}
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
