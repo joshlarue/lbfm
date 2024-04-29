@@ -17,12 +17,12 @@ export default function Home() {
 
   useEffect(() => {
     if (!Cookies.get('user_id')) {
-      router.push('http://localhost:3000/login');
+      router.push('/login');
     }
 
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/populatecarousel', {method: "GET"});
+        const response = await fetch('/api/populatecarousel', {method: "GET"});
         const responseData = await response.json();
 
         setAlbums(responseData);

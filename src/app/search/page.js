@@ -13,7 +13,7 @@ export default function Search() {
     e.preventDefault();
     const formData = new FormData();
     formData.append("query", query);
-    const response = await fetch('http://localhost:3000/api/search/', {method: 'POST', body: formData});
+    const response = await fetch('/api/search/', {method: 'POST', body: formData});
 
     // contains returned usernames from substring
     console.log(await response.json());

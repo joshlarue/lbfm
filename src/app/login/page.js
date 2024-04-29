@@ -22,8 +22,7 @@ export default function SignUpForm() {
 
   const router = useRouter();
   if (Cookies.get('user_id')) {
-    router.push("http://localhost:3000/");
-    router.push("http://localhost:3000/");
+    router.push('/');
   }
 
   // get user input
@@ -40,7 +39,7 @@ export default function SignUpForm() {
     formData.append("email", email);
     formData.append("password", password);
     if (loginPage) {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         body: formData,
       });
@@ -56,11 +55,11 @@ export default function SignUpForm() {
       else {
         // setLoggedIn(true);
         Cookies.set('user_id', sha256(username));
-        router.push("http://localhost:3000/");
+        router.push('/');
         setError('');
       }
     } else {
-      const response = await fetch('http://localhost:3000/api/auth/signup', {
+      const response = await fetch('/api/auth/signup', {
         method: 'POST',
         body: formData,
       });
@@ -80,7 +79,7 @@ export default function SignUpForm() {
       } else {
         setError('');
         Cookies.set('user_id', sha256(username));
-        router.push("http://localhost:3000/");
+        router.push('/');
       }
     }
   }
