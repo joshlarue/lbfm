@@ -19,7 +19,6 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <body className={inter.className}>
             <div className="flex flex-col items-start bg-base w-full min-h-screen">
-              <Header />
               <App children={children} />
             </div>
           </body>

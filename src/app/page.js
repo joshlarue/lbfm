@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "./contexts/Auth";
 import { parseCookies } from "./actions/parseCookies";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import Header from "./components/Header";
 
 export default function Home() {
   const [albums, setAlbums] = useState([]);
@@ -16,12 +17,12 @@ export default function Home() {
 
   useEffect(() => {
     if (!Cookies.get('user_id')) {
-      router.push('https://lbfm.jahsauce.cloud/login');
+      router.push('http://localhost:3000/login');
     }
 
     const fetchData = async () => {
       try {
-        const response = await fetch('https://lbfm.jahsauce.cloud/api/populatecarousel', {method: "GET"});
+        const response = await fetch('http://localhost:3000/api/populatecarousel', {method: "GET"});
         const responseData = await response.json();
 
         setAlbums(responseData);
@@ -52,6 +53,7 @@ export default function Home() {
   }
   return (
     <>
+      <Header />
       <div className="w-full min-h-screen flex flex-col gap-10 p-3">
         {display}
         <button onClick={handleLogOut} className="p-2 bg-base-dark font-bold text-primary-light">log out</button>

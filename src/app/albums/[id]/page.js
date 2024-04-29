@@ -6,6 +6,7 @@ import RatingBtns from "@/app/components/RatingBtns";
 import SaveReviewBtn from "@/app/components/SaveReviewBtn";
 import { useAuth } from "@/app/contexts/Auth";
 import Cookies from "js-cookie";
+import Header from "@/app/components/Header";
 
 export const ToSaveContext = createContext(null);
 
@@ -26,7 +27,7 @@ export default function Page(albumId) {
       try {
         let formData = new FormData();
         formData.append("userId", userId);
-        const response = await fetch('https://lbfm.jahsauce.cloud/api/getalbum/'+id, {method: "POST", body: formData});
+        const response = await fetch('http://localhost:3000/api/getalbum/'+id, {method: "POST", body: formData});
         const responseData = await response.json();
         console.log(responseData);
 
@@ -44,6 +45,7 @@ export default function Page(albumId) {
 
   return (
     <>
+      <Header />
       <ToSaveContext.Provider value={{ album, songs, setSongs, songOrder, setSongOrder, albumRating, setAlbumRating, saved, setSaved, pressedNumber, setPressedNumber, albumRating }}>
         <div className="w-full flex flex-col justify-center items-left">
           <div className="w-full flex">

@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { useRouter } from 'next/navigation';
 import sha256 from "sha256";
 import Cookies from "js-cookie";
+import Header from "../components/Header";
 
 export const UserEntryPageContext = createContext(null);
 
@@ -21,8 +22,8 @@ export default function SignUpForm() {
 
   const router = useRouter();
   if (Cookies.get('user_id')) {
-    router.push("https://lbfm.jahsauce.cloud/");
-    router.push("https://lbfm.jahsauce.cloud/");
+    router.push("http://localhost:3000/");
+    router.push("http://localhost:3000/");
   }
 
   // get user input
@@ -39,7 +40,7 @@ export default function SignUpForm() {
     formData.append("email", email);
     formData.append("password", password);
     if (loginPage) {
-      const response = await fetch('https://lbfm.jahsauce.cloud/api/auth/login', {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         body: formData,
       });
@@ -55,11 +56,11 @@ export default function SignUpForm() {
       else {
         // setLoggedIn(true);
         Cookies.set('user_id', sha256(username));
-        router.push("https://lbfm.jahsauce.cloud/");
+        router.push("http://localhost:3000/");
         setError('');
       }
     } else {
-      const response = await fetch('https://lbfm.jahsauce.cloud/api/auth/signup', {
+      const response = await fetch('http://localhost:3000/api/auth/signup', {
         method: 'POST',
         body: formData,
       });
@@ -79,19 +80,22 @@ export default function SignUpForm() {
       } else {
         setError('');
         Cookies.set('user_id', sha256(username));
-        router.push("https://lbfm.jahsauce.cloud/");
+        router.push("http://localhost:3000/");
       }
     }
-
   }
 
   return (
-    <UserEntryPageContext.Provider value={{ handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setLoginPage, setLoggedIn, error }}>
-      {loginPage ? 
-        <LoginComponent />
-      :
-        <SignupComponent />
-      }
-    </UserEntryPageContext.Provider>
+    <>
+      <Header loginHeader={true} />
+      <UserEntryPageContext.Provider value={{ handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setLoginPage, setLoggedIn, error }}>
+        {loginPage ? 
+          <LoginComponent />
+        :
+          <SignupComponent />
+        }
+      </UserEntryPageContext.Provider>
+    </>
+    
   )
 }
