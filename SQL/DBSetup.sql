@@ -16,10 +16,10 @@ CREATE TABLE users (
 );
 
 CREATE TABLE user_relationships (
-  user_id_1 VARCHAR(128),
-  user_id_2 VARCHAR(128),
-  FOREIGN KEY (user_id_1) REFERENCES users(user_id),
-  FOREIGN KEY (user_id_2) REFERENCES users(user_id)
+  user_id VARCHAR(128),
+  follower_id VARCHAR(128),
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (follower_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE artists (
