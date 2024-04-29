@@ -6,18 +6,21 @@ export default function Header(props) {
   return (
     <>
       {props.searchHeader ?
-        <header className="w-full mt-5 flex justify-center items-center">
-          <div className="flex h-[80%] w-[90%] justify-center">
+        <header className="w-full py-5 flex justify-end items-center">
+          <div className="flex h-[80%] w-full justify-center">
             <div className="flex flex-col justify-center items-center gap-3">
               <div className="flex gap-3 justify-end">
-                <button className="flex justify-center items-center bg-secondary text-base font-bold rounded-lg px-3 py-1">
+                <button className="flex justify-center items-center bg-primary-light text-base font-bold rounded-lg px-3 py-1">
                   <Link href={'/albums'}>albums</Link>
                 </button>
-                <button className="flex justify-center items-center bg-secondary text-base font-bold rounded-lg px-3 py-1">
+                <button className="flex justify-center items-center bg-primary-light text-base font-bold rounded-lg px-3 py-1">
                   <Link href={'/songs'}>songs</Link>
                 </button>
-                <button className="flex justify-center items-center bg-secondary text-base font-bold rounded-lg px-3 py-1">
+                <button className="flex justify-center items-center bg-primary-light text-base font-bold rounded-lg px-3 py-1">
                   <Link href={'/users'}>users</Link>
+                </button>
+                <button className="flex justify-center items-center bg-primary-light text-base font-bold rounded-lg px-3 py-1">
+                  <Link href={'/'}>home</Link>
                 </button>
               </div>
             </div>
