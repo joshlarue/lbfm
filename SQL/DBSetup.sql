@@ -19,7 +19,8 @@ CREATE TABLE user_relationships (
   user_id VARCHAR(128),
   follower_id VARCHAR(128),
   FOREIGN KEY (user_id) REFERENCES users(user_id),
-  FOREIGN KEY (follower_id) REFERENCES users(user_id)
+  FOREIGN KEY (follower_id) REFERENCES users(user_id),
+  CONSTRAINT pk_user_rels PRIMARY KEY (user_id, follower_id)
 );
 
 CREATE TABLE artists (
