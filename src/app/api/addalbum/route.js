@@ -34,18 +34,25 @@ export async function POST(req, res) {
   const artistId = sha256(artistName);
   const albumImg = albumResponse['images'][0]['url'];
   const albumTracks = albumResponse['tracks']['items'];
+  const randomAvgRating = Math.floor(Math.random() * 5) + 1
+
   let albumSongs = [];
   try {
     const connection = pool.getConnection();
 
     // insert artist info if they do not already exist in the DB
-    const res = (await connection).execute(`INSERT IGNORE INTO artists
+    (await connection).execute(`INSERT IGNORE INTO artists
                                 (artist_name, artist_id)
                                 VALUES ('${artistName}', '${artistId}')`);
 
     (await connection).execute(`INSERT IGNORE INTO albums
-                                (album_title, date_released, album_id, album_image, artist_id)
-                                VALUES ('${albumTitle}', '${releaseDate}', '${albumId}', '${albumImg}', '${artistId}');`);
+                                (album_title, date_released, album_id, album_image, artist_id, avg_rating)
+                                VALUES ('${albumTitle}', '${releaseDate}', '${albumId}', '${albumImg}', '${artistId}', ${randomAvgRating});`);
+                                
+    (await connection).execute(`INSERT IGNORE INTO album_artists
+                              (artist_id, album_id)
+                              VALUES ('${artistId}', '${albumId}');`);
+
 
     for (let i = 0; i < albumTracks.length; i++) {
       const curSong = albumTracks[i];
