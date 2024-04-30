@@ -8,6 +8,7 @@ import { parseCookies } from "./actions/parseCookies";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Header from "./components/Header";
+import Link from "next/link";
 
 export default function Home() {
   const [albums, setAlbums] = useState([]);
@@ -58,6 +59,7 @@ export default function Home() {
         {display}
         <button onClick={handleLogOut} className="p-2 bg-base-dark font-bold text-primary-light">log out</button>
       </div>
+      <Link href="/addalbum" className="fixed bottom-10 right-10 bg-base-dark text-4xl rounded-full p-3 px-4">+</Link>
     </>
   );
 }

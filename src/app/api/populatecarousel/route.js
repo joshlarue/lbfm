@@ -1,5 +1,5 @@
 'use server'
-import { Cookies } from 'js-cookie';
+import Cookies from 'js-cookie';
 import pool from '../../db/pool';
 import 'fs-extra';
 
