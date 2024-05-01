@@ -56,6 +56,8 @@ export async function POST(req, res) {
 
     for (let i = 0; i < albumTracks.length; i++) {
       const curSong = albumTracks[i];
+
+      // replaces single quotes with two single quotes ('') to escape them for the DB
       const songId = sha256(curSong['name'].replace(/'/gi, "''"));
 
       (await connection).execute(`INSERT IGNORE INTO songs
