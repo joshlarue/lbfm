@@ -79,6 +79,7 @@ for x in range(0, 27):
   for i in range(len(r['items'])):
     print(f"Processing song {x*i}")
     track_number = int(r['items'][i]['track']['track_number'])
+    
     # gets release date of album
     date_released = r['items'][i]['track']['album']['release_date']
     

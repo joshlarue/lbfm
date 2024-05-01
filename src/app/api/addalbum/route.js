@@ -53,16 +53,27 @@ export async function POST(req, res) {
                               (artist_id, album_id)
                               VALUES ('${artistId}', '${albumId}');`);
 
-
+    let trackNums = [];
     for (let i = 0; i < albumTracks.length; i++) {
       const curSong = albumTracks[i];
 
       // replaces single quotes with two single quotes ('') to escape them for the DB
       const songId = sha256(curSong['name'].replace(/'/gi, "''"));
 
+      // this checks to ensure track numbers are not doubled up
+      // in the case of dual disc albums like Mr. Morale on Spotify
+      let trackNumber = curSong['track_number'];
+      for (let j = 0; j < trackNums.length; j++) {
+        if (trackNums[j] == trackNumber) {
+          trackNumber = trackNums[j]+1;
+        }
+      }
+      trackNums.push(trackNumber);
+
+
       (await connection).execute(`INSERT IGNORE INTO songs
                                 (song_title, track_number, artist_id, album_id, song_id)
-                                VALUES ('${curSong['name'].replace(/'/gi, "''")}', '${curSong['track_number']}', '${artistId}', '${albumId}', '${songId}');`);
+                                VALUES ('${curSong['name'].replace(/'/gi, "''")}', '${trackNumber}', '${artistId}', '${albumId}', '${songId}');`);
     }
     return new Response(JSON.stringify({"albumId": albumId}), {status: 200});
   } catch {

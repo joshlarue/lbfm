@@ -30,13 +30,17 @@ export default function Search() {
           return <User user={user} numRatings={userArray.numUserRatings[index]} />
         }));
         break;
+      // would be cool to show avg album rating
       case 'albums':
         const albumArray = await response.json();
         console.log(albumArray);
         setItemDisplay(albumArray.albums.map((album) => {
           return <Album albumTitle={album['album_title']} albumId={album['album_id']} />
-        }))
+        }));
         break;
+      // would be cool to show avg ranking of song
+      // and when linking to album, highlight song
+      // and show which album song is from
       case 'songs':
         const songArray = await response.json();
         console.log(songArray);
