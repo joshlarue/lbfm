@@ -37,6 +37,13 @@ export default function Search() {
           return <Album albumTitle={album['album_title']} albumId={album['album_id']} />
         }))
         break;
+      case 'songs':
+        const songArray = await response.json();
+        console.log(songArray);
+        setItemDisplay(songArray.songs.map((song) => {
+          return <Song songTitle={song['song_title']} albumId={song['album_id']} />
+        }))
+        break;
     }
 
   }
@@ -101,6 +108,18 @@ function Album({albumTitle, albumId}) {
       <div className="w-full justify-end flex">
         <div className="text-right">
           {albumTitle}
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+function Song({songTitle, albumId}) {
+  return (
+    <Link href={'/albums/'+albumId} className="p-3 bg-base-dark w-full flex justify-end rounded-l-lg font-bold">
+      <div className="w-full justify-end flex">
+        <div className="text-right">
+          {songTitle}
         </div>
       </div>
     </Link>

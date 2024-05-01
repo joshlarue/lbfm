@@ -32,6 +32,18 @@ export async function POST(req, res) {
         
         break;
       case 'songs':
+        result = await connection.query(`
+          SELECT s.song_title, a.album_id
+          FROM songs s, albums a
+          WHERE s.song_title LIKE '%${query}%'
+          AND s.album_id = a.album_id
+          GROUP BY s.song_title, a.album_id;
+          `);
+        console.log(result[0]);
+        const songs = result[0];
+
+        response = new Response(JSON.stringify({songs}), {status: 200});
+        
         break;
       case 'users':
         // currently must have at least one rating to show up in search results
