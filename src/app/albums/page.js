@@ -59,10 +59,10 @@ function Album({id, img, title, artist, date, numReviews, rating}) {
       </div>
       <div className="flex flex-col flex-shrink w-[40vw] py-2">
         <div className="text-md text-base-dark font-bold">{title}</div>
-        <div className="text-sm">{artist}</div>
-        <div className="text-sm">{date}</div>
-        <div className="text-sm">number of reviews: {numReviews}</div>
-        <div className="text-sm text-accent font-bold">{rating}</div>
+        <div className="text-sm font-bold text-base pb-1">{artist}</div>
+        <div className="text-sm text-base pb-2">{date.slice(0, 10)}</div>
+        <div className="text-sm text-base-dark">{rating == null ? '' : <>average rating: <span className="font-bold">{parseFloat(rating).toFixed(1)}</span></>}</div>
+        <div className="text-sm"><span className="text-base-dark"># of reviews: </span><span className="text-base-dark font-bold">{numReviews}</span></div>
       </div>
     </Link>
   );

@@ -12,7 +12,7 @@ export async function POST(req, res) {
 
     // get album title, artist, image, and avg album rating
     const response = await connection.query(`
-      SELECT DISTINCT album_title, artist_name, album_image, CONVERT(date_released, DATE) AS date_released, a.album_id, avg_rating, COUNT(ar.album_id) AS num_reviews
+      SELECT DISTINCT album_title, artist_name, album_image, CONVERT(date_released, DATE) AS date_released, a.album_id, AVG(album_rating) AS avg_rating, COUNT(ar.album_id) AS num_reviews
       FROM albums a
       LEFT JOIN album_reviews ar ON a.album_id = ar.album_id
       JOIN artists USING(artist_id)
