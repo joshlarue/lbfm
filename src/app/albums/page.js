@@ -57,7 +57,7 @@ function Album({id, img, title, artist, date, numReviews, rating}) {
       <div className="bg-primary w-[50vw] h-[50vw] rounded-r-lg relative">
         <Image src={img} className="object-cover rounded-r-lg shadow-md" fill='true' />
       </div>
-      <div className="flex flex-col flex-shrink max-w-[40vw] py-2">
+      <div className="flex flex-col flex-shrink w-[40vw] py-2">
         <div className="text-md text-base-dark font-bold">{title}</div>
         <div className="text-sm">{artist}</div>
         {/* <div className="text-sm">{date}</div> */}
