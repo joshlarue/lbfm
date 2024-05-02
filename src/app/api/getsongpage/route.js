@@ -10,12 +10,13 @@ export async function POST(req, res) {
   try {
     const connection = await pool.getConnection();
 
-    // get album title, artist, image, and avg album rating
+    // TODO: rank song results based on average song ranking
     const response = await connection.query(`
-      SELECT DISTINCT album_title, artist_name, album_image, CONVERT(date_released, DATE) AS date_released, a.album_id, AVG(album_rating) AS avg_rating, COUNT(ar.album_id) AS num_reviews
-      FROM albums a
+      SELECT DISTINCT album_title, song_title, artist_name, album_image, CONVERT(date_released, DATE) AS date_released, a.album_id, AVG(album_rating) AS avg_rating
+      FROM albums a, songs s
       LEFT JOIN album_reviews ar ON a.album_id = ar.album_id
       JOIN artists USING(artist_id)
+      WHERE s.album_id = a.album_id
       GROUP BY a.album_id
       ORDER BY avg_rating DESC
       LIMIT ${lowerLimit}, ${upperLimit};

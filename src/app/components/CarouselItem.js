@@ -13,7 +13,7 @@ export default function CarouselItem(props) {
             <p className="text-sm w-[15vh] line-clamp-2">{props.itemName}</p>
             <div className="flex w-full justify-between">
               <p className="flex text-xs w-[75%] truncate">{props.artistName}</p>
-              <p className="text-xs text-accent font-extrabold">{props.rating}</p>
+              <p className="text-xs text-accent font-extrabold">{props.rating == null ? null : parseFloat(props.rating).toFixed(1)}</p>
             </div>
           </div>
         </div>
