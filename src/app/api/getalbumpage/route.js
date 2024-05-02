@@ -11,15 +11,17 @@ export async function POST(req, res) {
     const connection = await pool.getConnection();
 
     // get album title, artist, image, and avg album rating
-    const albumPageResults = await connection.query(`
-      SELECT DISTINCT album_title, artist_name, album_image, al.avg_rating, al.album_id, COUNT(ars.album_id)
+    const response = await connection.query(`
+      SELECT DISTINCT album_title, artist_name, album_image, date_released, al.avg_rating, al.album_id, COUNT(ars.album_id)
       FROM albums al, artists ar, album_artists aa, album_reviews ars
       WHERE al.album_id = aa.album_id
       AND al.artist_id = aa.artist_id
       AND aa.artist_id = ar.artist_id
       AND ars.album_id = al.album_id
+      GROUP BY album_title, artist_name, album_image, al.avg_rating, al.album_id
       LIMIT ${lowerLimit}, ${upperLimit};
     `);
+    const albumPageResults = response[0];
 
     connection.release();
     return new Response(JSON.stringify({albumPageResults}), {status: 200});
