@@ -47,10 +47,10 @@ export default function Header(props) {
                   <Image src={search} />
               </Link>
               <div className="flex gap-3">
-                <button className="flex justify-center items-center bg-secondary text-base font-bold rounded-lg px-3 py-1">
+                <button className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${props.highlight == 'albums' ? 'bg-secondary' : 'bg-primary-light'}`}>
                   <Link href={'/albums'}>albums</Link>
                 </button>
-                <button className="flex justify-center items-center bg-secondary text-base font-bold rounded-lg px-3 py-1">
+                <button className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${props.highlight == 'songs' ? 'bg-secondary' : 'bg-primary-light'}`}>
                   <Link href={'/songs'}>songs</Link>
                   </button>
               </div>
