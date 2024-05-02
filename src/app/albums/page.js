@@ -21,7 +21,7 @@ export default function Page() {
     const responseJson = await response.json();
     setAlbumsToDisplay(responseJson.albumPageResults.map((album) => {
       console.log(album.album_id);
-      return <Album img={album.album_image} artist={album.artist_name} date={album.date_released} title={album.album_title} numReviews={album["COUNT(ars.album_id"]} rating={album.avg_rating} id={album.album_id} />
+      return <Album img={album.album_image} artist={album.artist_name} date={album.date_released} title={album.album_title} numReviews={album.num_reviews} rating={album.avg_rating} id={album.album_id} />
     }));
   };
 
@@ -60,8 +60,8 @@ function Album({id, img, title, artist, date, numReviews, rating}) {
       <div className="flex flex-col flex-shrink w-[40vw] py-2">
         <div className="text-md text-base-dark font-bold">{title}</div>
         <div className="text-sm">{artist}</div>
-        {/* <div className="text-sm">{date}</div> */}
-        <div className="text-sm">{numReviews}</div>
+        <div className="text-sm">{date}</div>
+        <div className="text-sm">number of reviews: {numReviews}</div>
         <div className="text-sm text-accent font-bold">{rating}</div>
       </div>
     </Link>
