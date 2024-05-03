@@ -10,8 +10,7 @@ import Cookies from "js-cookie";
 import Header from "./components/Header";
 import Link from "next/link";
 
-export default function Home() {
-  const [albums, setAlbums] = useState([]);
+export default function Home({responseData}) {
   const [display, setDisplay] = useState([]);
   const { loggedIn } = useAuth();
   const router = useRouter();
@@ -23,10 +22,6 @@ export default function Home() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/populatecarousel', {method: "GET"});
-        const responseData = await response.json();
-
-        setAlbums(responseData);
         let firstCarouselData = responseData.slice(0, 7);
         let secondCarouselData = responseData.slice(7, 14);
         let thirdCarouselData = responseData.slice(14, 21);
@@ -62,4 +57,10 @@ export default function Home() {
       <Link href="/addalbum" className="fixed bottom-10 right-10 bg-base-dark text-4xl rounded-full p-3 px-4">+</Link>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const response = await fetch('/api/populatecarousel', {method: "GET"});
+  const responseData = await response.json();
+  return { props: {responseData} }
 }
