@@ -1,5 +1,5 @@
 'use client'
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ToSaveContext } from "../albums/[id]/page";
 import sha256 from "sha256";
 import { useAuth } from "../contexts/Auth";

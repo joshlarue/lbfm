@@ -22,11 +22,12 @@ export default function Songs(props) {
     <div className="w-full flex flex-col mt-3">
         <Reorder.Group axis="y" onReorder={handleReorder} values={songs}>
           <div className="w-[75%] flex flex-col gap-1 h-fit">
-            {songs.map((song) => {
+            {songs.map((song, index) => {
               return (
                   <Song 
                     song={song}
                     key={song.song_id}
+                    index={index+1}
                   />
               )
             })}
@@ -36,17 +37,17 @@ export default function Songs(props) {
   )
 }
 
-function Song(props) {
+function Song({song, index}) {
   const y = useMotionValue(0);
 
   return (
     <Reorder.Item
       style={{ y }}
-      value={props.song}
+      value={song}
       className="bg-base-dark p-2 rounded-tr-md rounded-br-md flex items-center shadow-sm justify-between">
 
-      <p className="text-sm">{props.song.song_title}</p>
-      <p className="text-s text-accent font-extrabold">{props.song.avg_rating}</p>
+      <p className="text-sm">{song.song_title}</p>
+      <p className="text-s text-primary-light font-extrabold">{index}</p>
     </Reorder.Item>
   )
 }
