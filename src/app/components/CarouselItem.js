@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import Rating from "./Rating"
 
 export default function CarouselItem(props) {
   return (
@@ -13,7 +14,7 @@ export default function CarouselItem(props) {
             <p className="text-sm w-[15vh] line-clamp-2">{props.itemName}</p>
             <div className="flex w-full justify-between">
               <p className="flex text-xs w-[75%] truncate">{props.artistName}</p>
-              <p className="text-xs text-accent font-extrabold">{props.rating == null ? null : parseFloat(props.rating).toFixed(1)}</p>
+              <Rating rating={props.rating} ratingStyle={"text-xs font-bold"} />
             </div>
           </div>
         </div>

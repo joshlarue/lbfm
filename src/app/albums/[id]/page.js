@@ -7,6 +7,7 @@ import SaveReviewBtn from "@/app/components/SaveReviewBtn";
 import { useAuth } from "@/app/contexts/Auth";
 import Cookies from "js-cookie";
 import Header from "@/app/components/Header";
+import Rating from "@/app/components/Rating";
 
 export const ToSaveContext = createContext(null);
 
@@ -51,7 +52,7 @@ export default function Page(albumId) {
           <div className="w-full flex">
             <div className="flex flex-col w-[60%]">
               <div className="p-3 flex flex-col gap-1">
-                <p className="text-lg font-bold">community rating: <span className="text-accent">{album.avg_rating}</span></p>
+                <p className="text-lg font-bold">{album.avg_rating != null ? 'community rating: ' : null}<Rating rating={album.avg_rating} ratingStyle={"inline"}/></p>
               </div>
               <Album album={album} />
 

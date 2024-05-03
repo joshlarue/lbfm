@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Link from "next/link";
 import Image from "next/image";
+import Rating from "../components/Rating";
 
 export default function Page() {
   const [lowerLimit, setLowerLimit] = useState(0);
@@ -61,7 +62,7 @@ function Album({id, img, title, artist, date, numReviews, rating}) {
         <div className="text-md text-base-dark font-bold">{title}</div>
         <div className="text-sm font-bold text-base pb-1">{artist}</div>
         <div className="text-sm text-base pb-2">{date.slice(0, 10)}</div>
-        <div className="text-sm text-base-dark">{rating == null ? '' : <>average rating: <span className="font-bold">{parseFloat(rating).toFixed(1)}</span></>}</div>
+        <div className="text-sm text-base-dark"><span>{rating != null ? 'avg rating: ' : null}<Rating rating={rating} ratingStyle={"font-bold text-sm inline"}/></span></div>
         <div className="text-sm"><span className="text-base-dark"># of reviews: </span><span className="text-base-dark font-bold">{numReviews}</span></div>
       </div>
     </Link>

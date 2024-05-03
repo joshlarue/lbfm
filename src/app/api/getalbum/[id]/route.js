@@ -12,13 +12,16 @@ export async function POST(req, res) {
 
     // get album title, artist, image, and avg album rating
     const [albumResults] = await connection.query(`
-      SELECT DISTINCT album_title, artist_name, album_image, al.avg_rating, al.album_id
-      FROM albums al, artists ar, album_artists aa, songs s
-      WHERE al.album_id = aa.album_id
-      AND al.artist_id = aa.artist_id
-      AND aa.artist_id = ar.artist_id
-      AND s.album_id = al.album_id
-      AND al.album_id = '${albumId}';
+      SELECT DISTINCT album_title, artist_name, album_image, AVG(album_rating) AS avg_rating, a.album_id
+      FROM albums a, album_artists aa, songs s
+      LEFT JOIN album_reviews ar USING(album_id)
+      JOIN artists art USING(artist_id)
+      WHERE a.album_id = aa.album_id
+      AND a.artist_id = aa.artist_id
+      AND aa.artist_id = art.artist_id
+      AND s.album_id = a.album_id
+      AND a.album_id = '${albumId}'
+      GROUP BY a.album_id;
     `);
 
     // will have to change to select by user
