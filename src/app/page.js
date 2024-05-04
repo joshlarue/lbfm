@@ -22,7 +22,7 @@ export default function Home() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/populatecarousel', {method: "GET", cache: 'no-store'});
+        const response = await fetch('/api/populatecarousel', {cache: 'no-store'});
         const responseData = await response.json();
 
         let firstCarouselData = responseData.slice(0, 7);
