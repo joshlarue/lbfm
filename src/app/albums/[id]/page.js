@@ -56,7 +56,6 @@ export default function Page(albumId) {
                 <p className="text-lg font-bold">{album.avg_rating != null ? 'community rating: ' : null}<Rating rating={album.avg_rating} ratingStyle={"inline"}/></p>
               </div>
               <Album album={album} />
-
             </div>
             <div className="flex flex-col w-full items-left mt-[10vh] mx-[5vw] gap-5">
               <p className="text-lg font-bold -mb-4">your rating:</p>

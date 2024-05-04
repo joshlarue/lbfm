@@ -23,25 +23,22 @@ export default function Home() {
     }
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = () => {
     try {
-      const response = await fetch('/api/populatecarousel', {cache: 'no-store'});
-      const responseData = await response.json();
-
-      let firstCarouselData = responseData.slice(0, 7);
-      let secondCarouselData = responseData.slice(7, 14);
-      let thirdCarouselData = responseData.slice(14, 21);
+      const response = fetch('/api/populatecarousel', {cache: 'no-store'});
       
-      setDisplay(
-        <>
-          <Carousel items={firstCarouselData} title={"hot albums"} />
-          <Carousel items={secondCarouselData} title={"trending songs"} />
-          <Carousel items={thirdCarouselData} title={"for you"} />
-        </>
-
-
-      );
-
+      response.then((response) => {
+        const responseJson = response.json();
+        responseJson.then((data) => {
+          setDisplay(
+            <>
+              <Carousel items={data.slice(0, 7)} title={"hot albums"} />
+              <Carousel items={data.slice(7, 14)} title={"trending songs"} />
+              <Carousel items={data.slice(14, 21)} title={"for you"} />
+            </>
+          );
+        })
+      });
     } catch (error) {
       console.error("Error fetching albums: " + error);
     }
