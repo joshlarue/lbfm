@@ -4,7 +4,6 @@ import Album from "@/app/components/Album";
 import { useState, useEffect, createContext } from "react";
 import RatingBtns from "@/app/components/RatingBtns";
 import SaveReviewBtn from "@/app/components/SaveReviewBtn";
-import { useAuth } from "@/app/contexts/Auth";
 import Cookies from "js-cookie";
 import Header from "@/app/components/Header";
 import Rating from "@/app/components/Rating";

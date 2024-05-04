@@ -3,7 +3,6 @@ import { useState, createContext, useEffect, useContext } from "react";
 import { FormEvent } from 'react';
 import LoginComponent from "./loginComponents/LoginComponent";
 import SignupComponent from "./loginComponents/SignupComponent";
-import { useAuth } from "../contexts/Auth";
 import { redirect } from "next/navigation"; 
 import { useRouter } from 'next/navigation';
 import sha256 from "sha256";
@@ -18,7 +17,6 @@ export default function SignUpForm() {
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
   const [loginPage, setLoginPage] = useState(true);
-  const { loggedIn, setLoggedIn, setUserId } = useAuth();
 
   const router = useRouter();
   if (Cookies.get('user_id')) {
@@ -87,7 +85,7 @@ export default function SignUpForm() {
   return (
     <>
       <Header loginHeader={true} />
-      <UserEntryPageContext.Provider value={{ handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setLoginPage, setLoggedIn, error }}>
+      <UserEntryPageContext.Provider value={{ handleSubmit, handleEmailChange, handleUserNameChange, handlePasswordChange, setLoginPage, error }}>
         {loginPage ? 
           <LoginComponent />
         :
@@ -95,6 +93,5 @@ export default function SignUpForm() {
         }
       </UserEntryPageContext.Provider>
     </>
-    
-  )
+  );
 }

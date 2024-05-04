@@ -3,7 +3,6 @@ import { useEffect, useState, useLayoutEffect, createContext } from "react";
 import Carousel from "./components/Carousel";
 import Image from "next/image";
 import { redirect } from "next/navigation"; 
-import { AuthProvider, useAuth } from "./contexts/Auth";
 import { parseCookies } from "./actions/parseCookies";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -12,15 +11,10 @@ import Link from "next/link";
 
 export default function Home() {
   const [display, setDisplay] = useState([]);
-  const { loggedIn } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!Cookies.get('user_id')) {
-      router.push('/login');
-    } else {
-      fetchData();
-    }
+    fetchData();
   }, []);
 
   const fetchData = () => {

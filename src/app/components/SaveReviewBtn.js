@@ -2,7 +2,6 @@
 import { useState, useContext, useEffect } from "react";
 import { ToSaveContext } from "../albums/[id]/page";
 import sha256 from "sha256";
-import { useAuth } from "../contexts/Auth";
 import Cookies from "js-cookie";
 
 export default function SaveReviewBtn() {

@@ -1,12 +1,17 @@
 'use client'
-import { useState, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
-
 export const AuthProvider = ({children}) => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userId, setUserId] = useState();
-  return <AuthContext.Provider value={ {loggedIn, setLoggedIn, userId, setUserId} }>{children}</AuthContext.Provider>
+  const router = useRouter();
+  useEffect(() => {
+    if (!Cookies.get('user_id')) {
+      router.push('/login');
+    }
+  }, []);
+
+  return <AuthContext.Provider>{children}</AuthContext.Provider>
 }
