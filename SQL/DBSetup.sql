@@ -75,6 +75,7 @@ CREATE TABLE song_rankings (
   user_id VARCHAR(128),
   song_id VARCHAR(128),
   song_ranking INT,
+  CONSTRAINT pk_song_rankings PRIMARY KEY (user_id, song_id, song_ranking),
   FOREIGN KEY (user_id) REFERENCES users(user_id),
   FOREIGN KEY (song_id) REFERENCES songs(song_id)
 );
