@@ -21,7 +21,7 @@ export default function Page() {
     const responseJson = await response.json();
     console.log(responseJson);
     setSongsToDisplay(responseJson.songPageResults.map((song) => {
-      return <Song img={song.album_image} artist={song.artist_name} date={song.date_released} title={song.song_title} numRankings={song.num_rankings} ranking={song.avg_ranking} id={song.album_id} />
+      return <Song img={song.album_image} artist={song.artist_name} date={song.date_released} title={song.song_title} numRankings={song.num_rankings} ranking={song.avg_ranking} numTracks={song.num_tracks} id={song.album_id} />
     }));
   };
 
@@ -51,7 +51,7 @@ export default function Page() {
   );
 }
 
-function Song({id, img, title, artist, date, numRankings, ranking}) {
+function Song({id, img, title, artist, date, numRankings, ranking, numTracks}) {
   return (
     <Link href={`/albums/${id}`} className="flex gap-5 bg-primary-light rounded-r-lg shadow-md">
       <div className="bg-primary w-[50vw] h-[50vw] rounded-r-lg relative">
@@ -61,7 +61,7 @@ function Song({id, img, title, artist, date, numRankings, ranking}) {
         <div className="text-md text-base-dark font-bold">{title}</div>
         <div className="text-sm font-bold text-base pb-1">{artist}</div>
         <div className="text-sm text-base pb-2">{date.slice(0, 10)}</div>
-        <div className="text-sm text-base-dark">{ranking == null ? '' : <>average ranking: <span className="font-bold">{parseFloat(ranking).toFixed(1)}</span></>}</div>
+        <div className="text-sm text-base-dark">{ranking == null ? '' : <>average ranking: <span className="font-bold">{parseFloat(ranking).toFixed(0)}/{numTracks}</span></>}</div>
         <div className="text-sm"><span className="text-base-dark"># of rankings: </span><span className="text-base-dark font-bold">{numRankings}</span></div>
       </div>
     </Link>
