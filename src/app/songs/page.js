@@ -21,7 +21,7 @@ export default function Page() {
     const responseJson = await response.json();
     console.log(responseJson);
     setSongsToDisplay(responseJson.songPageResults.map((song) => {
-      return <Song img={song.album_image} artist={song.artist_name} date={song.date_released} title={song.song_title} numRankings={song.num_rankings} ranking={song.avg_rating} id={song.album_id} />
+      return <Song img={song.album_image} artist={song.artist_name} date={song.date_released} title={song.song_title} numRankings={song.num_rankings} ranking={song.avg_ranking} id={song.album_id} />
     }));
   };
 

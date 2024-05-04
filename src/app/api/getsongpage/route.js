@@ -12,13 +12,14 @@ export async function POST(req, res) {
 
     // TODO: rank song results based on average song ranking
     const response = await connection.query(`
-      SELECT DISTINCT album_title, song_title, song_id, track_number, artist_name, album_image, CONVERT(a.date_released, DATE) AS date_released, a.album_id, AVG(album_rating) AS avg_rating,  COUNT(ar.album_id) AS num_rankings
-      FROM albums a, songs s
-      LEFT JOIN album_reviews ar USING(album_id)
-      JOIN artists USING(artist_id)
-      WHERE s.album_id = a.album_id
-      GROUP BY a.album_id, song_title, artist_name, song_id, track_number
-      ORDER BY avg_rating DESC
+      SELECT DISTINCT album_title, song_title, s.song_id, track_number, art.artist_name, album_image, CONVERT(a.date_released, DATE) AS date_released, a.album_id, AVG((SELECT song_ranking FROM song_rankings WHERE song_id = s.song_id)) AS avg_ranking, COUNT(sr.song_id) AS num_rankings
+      FROM albums a, songs s, song_rankings sr, artists art
+      WHERE a.artist_id = s.artist_id
+      AND art.artist_id = s.artist_id
+      AND s.album_id = a.album_id
+      AND s.song_id = sr.song_id
+      GROUP BY album_id, song_title, artist_name, song_id, track_number
+      ORDER BY avg_ranking ASC
       LIMIT ${lowerLimit}, ${upperLimit};
     `);
     let songPageResults = response[0];
