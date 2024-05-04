@@ -18,8 +18,9 @@ export default function Home() {
   useEffect(() => {
     if (!Cookies.get('user_id')) {
       router.push('/login');
+    } else {
+      fetchData();
     }
-    fetchData();
   }, []);
 
   const fetchData = async () => {
