@@ -53,7 +53,7 @@ export default function Header(props) {
                 <button className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${props.highlight == 'songs' ? 'bg-secondary' : 'bg-primary-light'}`}>
                   <Link href={'/songs'}>songs</Link>
                 </button>
-                <button className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1`}>
+                <button className={`flex justify-center items-center font-bold rounded-lg px-3 py-1 ${props.highlight == 'songs' || props.highlight == 'albums' ? 'bg-primary-light text-base-dark' : 'bg-base-dark text-primary-light box-border'}`}>
                   <Link href={'/'}>home</Link>
                 </button>
               </div>

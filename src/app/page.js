@@ -19,32 +19,32 @@ export default function Home() {
     if (!Cookies.get('user_id')) {
       router.push('/login');
     }
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/populatecarousel', {cache: 'no-store'});
-        const responseData = await response.json();
-
-        let firstCarouselData = responseData.slice(0, 7);
-        let secondCarouselData = responseData.slice(7, 14);
-        let thirdCarouselData = responseData.slice(14, 21);
-        
-        setDisplay(
-          <>
-            <Carousel items={firstCarouselData} title={"hot albums"} />
-            <Carousel items={secondCarouselData} title={"trending songs"} />
-            <Carousel items={thirdCarouselData} title={"for you"} />
-          </>
-
-
-        );
-
-      } catch (error) {
-        console.error("Error fetching albums: " + error);
-      }
-    }
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api/populatecarousel', {cache: 'no-store'});
+      const responseData = await response.json();
+
+      let firstCarouselData = responseData.slice(0, 7);
+      let secondCarouselData = responseData.slice(7, 14);
+      let thirdCarouselData = responseData.slice(14, 21);
+      
+      setDisplay(
+        <>
+          <Carousel items={firstCarouselData} title={"hot albums"} />
+          <Carousel items={secondCarouselData} title={"trending songs"} />
+          <Carousel items={thirdCarouselData} title={"for you"} />
+        </>
+
+
+      );
+
+    } catch (error) {
+      console.error("Error fetching albums: " + error);
+    }
+  }
 
   const handleLogOut = () => {
     Cookies.remove('user_id');
