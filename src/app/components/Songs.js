@@ -20,8 +20,7 @@ export default function Songs(props) {
 
   return (
     <div className="w-full flex flex-col mt-3">
-      <p className="mt-5 mb-2 ml-3 text-xs">drag to rank</p>
-      <p className="-mt-2 mb-1 ml-3 text-xs">🡣</p>
+      <p className="mt-5 mb-3 ml-5 text-xs">drag to rank</p>
         <Reorder.Group axis="y" onReorder={handleReorder} values={songs}>
           <div className="w-[75%] flex flex-col gap-1 h-fit">
             {songs.map((song, index) => {

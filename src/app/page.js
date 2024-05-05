@@ -1,9 +1,8 @@
 'use client'
 import { useEffect, useState, useLayoutEffect, createContext } from "react";
+import dynamic from 'next/dynamic';
 import Carousel from "./components/Carousel";
 import Image from "next/image";
-import { redirect } from "next/navigation"; 
-import { parseCookies } from "./actions/parseCookies";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Header from "./components/Header";
@@ -19,11 +18,11 @@ export default function Home() {
 
   const fetchData = () => {
     try {
-      const response = fetch('/api/populatecarousel', {cache: 'no-store'});
-      
+      const response = fetch('/api/populatecarousel', {method: 'POST'});
       response.then((response) => {
         const responseJson = response.json();
         responseJson.then((data) => {
+          console.log("data!", data);
           setDisplay(
             <>
               <Carousel items={data.slice(0, 7)} title={"hot albums"} />

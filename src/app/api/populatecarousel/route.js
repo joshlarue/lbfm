@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import pool from '../../db/pool';
 import 'fs-extra';
 
-export async function GET(req, res) {
+export async function POST(req, res) {
   const user_id = Cookies.get('user_id');
   try {
     const connection = await pool.getConnection();

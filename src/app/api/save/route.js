@@ -47,7 +47,7 @@ export async function POST(req, res) {
 
     for (let i = 1; i <= songOrder.length; i++) {
       const numRankingsQuery = await connection.query(`
-        SELECT COUNT('${userId}') AS num_rankings
+        SELECT COUNT(user_id) AS num_rankings
         FROM song_rankings
         WHERE user_id = '${userId}'
         AND song_id = (SELECT song_id
