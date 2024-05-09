@@ -22,7 +22,6 @@ export default function Home() {
       response.then((response) => {
         const responseJson = response.json();
         responseJson.then((data) => {
-          console.log("data!", data);
           setDisplay(
             <>
               <Carousel items={data.slice(0, 7)} title={"hot albums"} />

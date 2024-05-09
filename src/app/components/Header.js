@@ -38,7 +38,7 @@ export default function Header(props) {
       :
         <header className="w-full h-[15vh] flex justify-center items-center">
           <div className="flex h-[80%] w-[90%] justify-between">
-            <Link href={'/'} className="flex justify-center items-center text-3xl font-extrabold">
+            <Link href={'/'} className="flex justify-center items-center text-2xl font-extrabold pr-3 ">
               <span className='text-primary-light'>FR</span>
               <span className='text-accent'>EQ</span>
             </Link>
@@ -47,13 +47,13 @@ export default function Header(props) {
                   <Image src={search} />
               </Link>
               <div className="flex gap-3">
-                <button className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${props.highlight == 'albums' ? 'bg-secondary' : 'bg-primary-light'}`}>
+                <button className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-2 py-1 ${props.highlight == 'albums' ? 'bg-secondary' : 'bg-primary-light'}`}>
                   <Link href={'/albums'}>albums</Link>
                 </button>
-                <button className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${props.highlight == 'songs' ? 'bg-secondary' : 'bg-primary-light'}`}>
+                <button className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-2 py-1 ${props.highlight == 'songs' ? 'bg-secondary' : 'bg-primary-light'}`}>
                   <Link href={'/songs'}>songs</Link>
                 </button>
-                <button className={`flex justify-center items-center font-bold rounded-lg px-3 py-1 ${props.highlight == 'songs' || props.highlight == 'albums' ? 'bg-primary-light text-base-dark' : 'bg-base-dark text-primary-light box-border'}`}>
+                <button className={`flex justify-center items-center font-bold rounded-lg px-2 py-1 ${props.highlight == 'songs' || props.highlight == 'albums' ? 'bg-primary-light text-base-dark' : 'bg-base-dark text-primary-light box-border'}`}>
                   <Link href={'/'}>home</Link>
                 </button>
               </div>
