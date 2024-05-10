@@ -2,7 +2,7 @@
 import Header from "../components/Header";
 import search from '../assets/search.svg';
 import Image from "next/image";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 
 export default function Search() {
@@ -54,37 +54,39 @@ export default function Search() {
 
   return (
     <>
-    <div className="w-full h-full flex flex-col p-5 bg-base-dark rounded-b-lg">
-      <div className="w-full flex flex-col items-center">
-        <form onSubmit={sendQuery} onChange={updateQuery}>
-          <input className='text-base-dark w-[80vw] h-10 bg-primary-light rounded-full flex justify-center p-5' />
-        </form>
-        <header className="w-full py-5 flex justify-end items-center">
-          <div className="flex h-[80%] w-full justify-center">
-            <div className="flex flex-col justify-center items-center gap-3">
-            <span className="">search type:</span>
-              <div className="flex gap-3 justify-center items-center">
-                <button onClick={() => setSearchType('albums')} className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${searchType == 'albums' ? "bg-secondary" : "bg-primary-light"}`}>
-                  albums
-                </button>
-                <button onClick={() => setSearchType('songs')} className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${searchType == 'songs' ? "bg-secondary" : "bg-primary-light"}`}>
-                  songs
-                </button>
-                <button onClick={() => setSearchType('users')} className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${searchType == 'users' ? "bg-secondary" : "bg-primary-light"}`}>
-                  users
-                </button>
-                <button className={`flex justify-center items-center bg-primary-light text-base-dark font-bold rounded-lg px-3 py-1`}>
-                  <Link href="/">home</Link>
-                </button>
+      <div className="w-full h-full flex flex-col p-5 bg-base-dark rounded-b-lg">
+        <div className="w-full flex flex-col items-center">
+          <form onSubmit={sendQuery} onChange={updateQuery}>
+            <input className='text-base-dark w-[80vw] h-10 bg-primary-light rounded-full flex justify-center p-5' />
+          </form>
+          <header className="w-full py-5 flex justify-end items-center">
+            <div className="flex h-[80%] w-full justify-center">
+              <div className="flex flex-col justify-center items-center gap-3">
+              <span className="">search type:</span>
+                <div className="flex gap-3 justify-center items-center">
+                  <button onClick={() => setSearchType('albums')} className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${searchType == 'albums' ? "bg-secondary" : "bg-primary-light"}`}>
+                    albums
+                  </button>
+                  <button onClick={() => setSearchType('songs')} className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${searchType == 'songs' ? "bg-secondary" : "bg-primary-light"}`}>
+                    songs
+                  </button>
+                  <button onClick={() => setSearchType('users')} className={`flex justify-center items-center text-base-dark font-bold rounded-lg px-3 py-1 ${searchType == 'users' ? "bg-secondary" : "bg-primary-light"}`}>
+                    users
+                  </button>
+                  <button className={`flex justify-center items-center bg-primary-light text-base-dark font-bold rounded-lg px-3 py-1`}>
+                    <Link href="/">home</Link>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </header>
+          </header>
+        </div>
       </div>
-    </div>
-    <div className="w-[80%] self-end flex flex-col items-end pt-5 gap-3">
-      {itemDisplay}
-    </div>
+      <Suspense fallback={<SearchFallback />}>
+        <div className="w-[80%] self-end flex flex-col items-end pt-5 gap-3">
+          {itemDisplay}
+        </div>
+      </Suspense>
     </>
   );
 }
@@ -128,4 +130,12 @@ function Song({songTitle, albumId}) {
       </div>
     </Link>
   )
+}
+
+function SearchFallback() {
+  return (
+    <>
+      ...
+    </>
+  );
 }
