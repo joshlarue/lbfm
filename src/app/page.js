@@ -18,16 +18,19 @@ export default function Home() {
 
   const fetchData = () => {
     try {
-      const response = fetch('/api/populatecarousel', {method: 'POST'});
+      const response = fetch('/api/populatecarousel', {
+        method: 'POST',
+        headers: {"userId": Cookies.get("user_id")}
+      });
       response.then((response) => {
         const responseJson = response.json();
         responseJson.then((data) => {
           console.log("data!", data);
           setDisplay(
             <>
-              <Carousel items={data.slice(0, 7)} title={"hot albums"} />
-              <Carousel items={data.slice(7, 14)} title={"trending songs"} />
-              <Carousel items={data.slice(14, 21)} title={"for you"} />
+              <Carousel items={data[0]} title={"top rated albums by community"} />
+              <Carousel items={data[1]} title={"albums you haven't rated"} />
+              <Carousel items={data[2]} title={"albums you've rated"} />
             </>
           );
         })
