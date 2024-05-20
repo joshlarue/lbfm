@@ -1,60 +1,82 @@
-import pool from "../../src/app/db/pool.js";
-import sha256 from "sha256";
+"use server";
+const sha256 = require("sha256");
+const mysql = require("mysql2/promise");
+require("dotenv").config();
+
+console.log(process.env.MYSQL_PORT);
+
+const pool = mysql.createPool({
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  port: process.env.MYSQL_PORT,
+});
 
 const AUTH_URL = "https://accounts.spotify.com/api/token";
 const API_URL = "https://api.spotify.com/v1";
 
 // acquire access token from spotify
-const authResponse = await fetch(AUTH_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/x-www-form-urlencoded",
-  },
-  body: `grant_type=client_credentials&client_id=${process.env.SPOTIFY_CLIENT_ID}&client_secret=${process.env.SPOTIFY_CLIENT_SECRET}`,
-});
-const authResponseJson = await authResponse.json();
-const spotifyAccessToken = authResponseJson["access_token"];
+let authResponseJson;
+const getCredentials = async () => {
+  const authResponse = await fetch(AUTH_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `grant_type=client_credentials&client_id=${process.env.SPOTIFY_CLIENT_ID}&client_secret=${process.env.SPOTIFY_CLIENT_SECRET}`,
+  });
+  authResponseJson = await authResponse.json();
+  const spotifyAccessToken = authResponseJson["access_token"];
+};
+getCredentials();
 
 const connection = pool.getConnection();
 const playlistId = "2ZqjemHmfmmpVomtt85Vd3";
 
-for (let i = 0; i < 100; i++) {
-  const playlistResponse = await fetch(
-    // fetch 50 tracks from the playlist at a time
-    `${API_URL}/playlists/${playlistId}/tracks?offset=${(i + 1) * 50}&limit=50`
-  );
-  for (let j = 0; i < playlistResponse["items"].length; i++) {
-    const dbAlbumId = sha256(
-      playlistResponse["items"][j]["track"]["album"]["name"]
+const dataFetchRunner = async () => {
+  for (let i = 0; i < 100; i++) {
+    const playlistResponse = await fetch(
+      // fetch 50 tracks from the playlist at a time
+      `${API_URL}/playlists/${playlistId}/tracks?offset=${
+        (i + 1) * 50
+      }&limit=50`
     );
-    const dbArtistId = sha256(
-      playlistResponse["items"][j]["track"]["album"]["artists"][0]["name"]
-    );
+    for (let j = 0; i < playlistResponse["items"].length; i++) {
+      const dbAlbumId = sha256(
+        playlistResponse["items"][j]["track"]["album"]["name"]
+      );
+      const dbArtistId = sha256(
+        playlistResponse["items"][j]["track"]["album"]["artists"][0]["name"]
+      );
 
-    const albumExistsResponse = connection.query(`
-      SELECT album_id FROM albums
-      WHERE album_id = ${dbAlbumId};
-    `);
-    const artistExistsResponse = connection.query(`
-      SELECT artist_id FROM artists
-      WHERE artist_id = ${dbArtistId};
-    `);
+      const albumExistsResponse = connection.query(`
+        SELECT album_id FROM albums
+        WHERE album_id = ${dbAlbumId};
+      `);
+      const artistExistsResponse = connection.query(`
+        SELECT artist_id FROM artists
+        WHERE artist_id = ${dbArtistId};
+      `);
 
-    let [insertAlbum, insertArtist] = [false, false];
-    if (albumExistsResponse[0].length > 0) insertAlbum = true;
-    if (artistExistsResponse[0].length > 0) insertArtist = true;
+      let [insertAlbum, insertArtist] = [false, false];
+      if (albumExistsResponse[0].length > 0) insertAlbum = true;
+      if (artistExistsResponse[0].length > 0) insertArtist = true;
 
-    if (insertAlbum || insertArtist) {
-      const spotifyAlbumId = playlistResponse["items"][i]["track"]["album"][
-        "href"
-      ]
-        .split("https://open.spotify.com/album/")[1]
-        .split("?")[0];
+      if (insertAlbum || insertArtist) {
+        const spotifyAlbumId = playlistResponse["items"][i]["track"]["album"][
+          "href"
+        ]
+          .split("https://open.spotify.com/album/")[1]
+          .split("?")[0];
 
-      getAlbumAndInsert(spotifyAlbumId, insertAlbum, insertArtist);
+        getAlbumAndInsert(spotifyAlbumId, insertAlbum, insertArtist);
+      }
     }
   }
-}
+};
+
+dataFetchRunner();
 
 async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
   // fetch album info from spotify
