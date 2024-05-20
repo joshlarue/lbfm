@@ -3,8 +3,6 @@ const sha256 = require("sha256");
 const mysql = require("mysql2/promise");
 require("dotenv").config();
 
-console.log(process.env.MYSQL_PORT);
-
 const pool = mysql.createPool({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
@@ -17,7 +15,7 @@ const AUTH_URL = "https://accounts.spotify.com/api/token";
 const API_URL = "https://api.spotify.com/v1";
 
 // acquire access token from spotify
-let authResponseJson;
+let spotifyAccessToken;
 const getCredentials = async () => {
   const authResponse = await fetch(AUTH_URL, {
     method: "POST",
@@ -26,59 +24,65 @@ const getCredentials = async () => {
     },
     body: `grant_type=client_credentials&client_id=${process.env.SPOTIFY_CLIENT_ID}&client_secret=${process.env.SPOTIFY_CLIENT_SECRET}`,
   });
-  authResponseJson = await authResponse.json();
-  const spotifyAccessToken = authResponseJson["access_token"];
+  const authResponseJson = await authResponse.json();
+  spotifyAccessToken = authResponseJson["access_token"];
+  return spotifyAccessToken;
 };
-getCredentials();
 
-const connection = pool.getConnection();
 const playlistId = "2ZqjemHmfmmpVomtt85Vd3";
 
 const dataFetchRunner = async () => {
+  const connection = await pool.getConnection();
+  const spotifyAccessToken = await getCredentials();
   for (let i = 0; i < 100; i++) {
     const playlistResponse = await fetch(
       // fetch 50 tracks from the playlist at a time
       `${API_URL}/playlists/${playlistId}/tracks?offset=${
         (i + 1) * 50
-      }&limit=50`
+      }&limit=50`,
+      {
+        headers: new Headers({
+          Authorization: `Bearer ${spotifyAccessToken}`,
+        }),
+      }
     );
-    for (let j = 0; i < playlistResponse["items"].length; i++) {
+    const playlistResponseJson = await playlistResponse.json();
+    for (let j = 0; i < playlistResponseJson["items"].length; i++) {
       const dbAlbumId = sha256(
-        playlistResponse["items"][j]["track"]["album"]["name"]
+        playlistResponseJson["items"][j]["track"]["album"]["name"]
       );
       const dbArtistId = sha256(
-        playlistResponse["items"][j]["track"]["album"]["artists"][0]["name"]
+        playlistResponseJson["items"][j]["track"]["album"]["artists"][0]["name"]
       );
-
       const albumExistsResponse = connection.query(`
         SELECT album_id FROM albums
-        WHERE album_id = ${dbAlbumId};
+        WHERE album_id = '${dbAlbumId}';
       `);
       const artistExistsResponse = connection.query(`
         SELECT artist_id FROM artists
-        WHERE artist_id = ${dbArtistId};
+        WHERE artist_id = '${dbArtistId}';
       `);
 
       let [insertAlbum, insertArtist] = [false, false];
-      if (albumExistsResponse[0].length > 0) insertAlbum = true;
-      if (artistExistsResponse[0].length > 0) insertArtist = true;
+      if (albumExistsResponse[0] === undefined) insertAlbum = true;
+      if (artistExistsResponse[0] === undefined) insertArtist = true;
 
       if (insertAlbum || insertArtist) {
-        const spotifyAlbumId = playlistResponse["items"][i]["track"]["album"][
-          "href"
-        ]
-          .split("https://open.spotify.com/album/")[1]
-          .split("?")[0];
+        const spotifyAlbumId = playlistResponseJson["items"][i]["track"][
+          "album"
+        ]["href"].split("https://api.spotify.com/v1/albums/")[1];
 
         getAlbumAndInsert(spotifyAlbumId, insertAlbum, insertArtist);
       }
     }
   }
+  connection.destroy();
 };
 
 dataFetchRunner();
 
 async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
+  const connection = pool.getConnection();
   // fetch album info from spotify
   const albumResponse = await fetch(`${API_URL}/albums/${spotifyAlbumId}`, {
     headers: new Headers({
@@ -154,6 +158,7 @@ async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
       `);
       }
       console.log("Successfully inserted album_artists and songs!");
+      connection.destroy();
     }
   } catch {
     console.error("Massive error! Good thing I 'caught' it!");
