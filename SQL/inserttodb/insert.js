@@ -32,80 +32,96 @@ const getCredentials = async () => {
 const playlistId = "2ZqjemHmfmmpVomtt85Vd3";
 
 const dataFetchRunner = async () => {
-  const connection = await pool.getConnection();
-  const spotifyAccessToken = await getCredentials();
-  for (let i = 0; i < 100; i++) {
-    const playlistResponse = await fetch(
-      // fetch 50 tracks from the playlist at a time
-      `${API_URL}/playlists/${playlistId}/tracks?offset=${
-        (i + 1) * 50
-      }&limit=50`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${spotifyAccessToken}`,
-        }),
-      }
-    );
-    const playlistResponseJson = await playlistResponse.json();
-    for (let j = 0; i < playlistResponseJson["items"].length; i++) {
-      const dbAlbumId = sha256(
-        playlistResponseJson["items"][j]["track"]["album"]["name"]
+  console.log("Getting playlist details...");
+  try {
+    const connection = await pool.getConnection();
+    const spotifyAccessToken = await getCredentials();
+    for (let i = 0; i < 100; i++) {
+      const playlistResponse = await fetch(
+        // fetch 50 tracks from the playlist at a time
+        `${API_URL}/playlists/${playlistId}/tracks?offset=${
+          (i + 1) * 50
+        }&limit=50`,
+        {
+          headers: new Headers({
+            Authorization: `Bearer ${spotifyAccessToken}`,
+          }),
+        }
       );
-      const dbArtistId = sha256(
-        playlistResponseJson["items"][j]["track"]["album"]["artists"][0]["name"]
-      );
-      const albumExistsResponse = connection.query(`
-        SELECT album_id FROM albums
-        WHERE album_id = '${dbAlbumId}';
-      `);
-      const artistExistsResponse = connection.query(`
-        SELECT artist_id FROM artists
-        WHERE artist_id = '${dbArtistId}';
-      `);
+      const playlistResponseJson = await playlistResponse.json();
+      for (let j = 0; j < playlistResponseJson["items"].length; j++) {
+        const dbAlbumId = sha256(
+          playlistResponseJson["items"][j]["track"]["album"]["name"]
+        );
+        const dbArtistId = sha256(
+          playlistResponseJson["items"][j]["track"]["album"]["artists"][0][
+            "name"
+          ]
+        );
+        console.log(
+          "Checking whether to insert... album ID is " +
+            dbAlbumId +
+            " and artist ID is " +
+            dbArtistId
+        );
+        const albumExistsResponse = await connection.query(`
+          SELECT album_id FROM albums
+          WHERE album_id = '${dbAlbumId}';
+        `);
+        const artistExistsResponse = await connection.query(`
+          SELECT artist_id FROM artists
+          WHERE artist_id = '${dbArtistId}';
+        `);
 
-      let [insertAlbum, insertArtist] = [false, false];
-      if (albumExistsResponse[0] === undefined) insertAlbum = true;
-      if (artistExistsResponse[0] === undefined) insertArtist = true;
+        let [insertAlbum, insertArtist] = [false, false];
+        if (albumExistsResponse[0].length === 0) insertAlbum = true;
+        if (artistExistsResponse[0].length === 0) insertArtist = true;
 
-      if (insertAlbum || insertArtist) {
-        const spotifyAlbumId = playlistResponseJson["items"][i]["track"][
-          "album"
-        ]["href"].split("https://api.spotify.com/v1/albums/")[1];
+        if (insertAlbum || insertArtist) {
+          const spotifyAlbumId = playlistResponseJson["items"][i]["track"][
+            "album"
+          ]["href"].split("https://api.spotify.com/v1/albums/")[1];
 
-        getAlbumAndInsert(spotifyAlbumId, insertAlbum, insertArtist);
+          getAlbumAndInsert(spotifyAlbumId, insertAlbum, insertArtist);
+        }
       }
     }
+    connection.destroy();
+  } catch (err) {
+    console.log("Error fetching playlist or reading from DB: ", err);
   }
-  connection.destroy();
 };
-
-dataFetchRunner();
 
 async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
   const connection = pool.getConnection();
-  // fetch album info from spotify
-  const albumResponse = await fetch(`${API_URL}/albums/${spotifyAlbumId}`, {
-    headers: new Headers({
-      Authorization: `Bearer ${spotifyAccessToken}`,
-    }),
-  });
-  const albumResponseJson = await albumResponse.json();
+  try {
+    // fetch album info from spotify
+    const albumResponse = await fetch(`${API_URL}/albums/${spotifyAlbumId}`, {
+      headers: new Headers({
+        Authorization: `Bearer ${spotifyAccessToken}`,
+      }),
+    });
+    const albumResponseJson = await albumResponse.json();
 
-  // use album info to populate the following fields for insertion
-  const releaseDate = albumResponseJson["release_date"];
-  const albumTitle = albumResponseJson["name"].replace(/'/gi, "''");
-  const albumId = sha256(albumTitle);
-  const artistName = albumResponseJson["artists"][0]["name"].replace(
-    /'/gi,
-    "''"
-  );
-  const artistId = sha256(artistName);
-  const albumImg = albumResponseJson["images"][0]["url"];
-  const albumTracks = albumResponseJson["tracks"]["items"];
-  const randomAvgRating = Math.floor(Math.random() * 5) + 1;
+    // use album info to populate the following fields for insertion
+    const releaseDate = albumResponseJson["release_date"];
+    const albumTitle = albumResponseJson["name"].replace(/'/gi, "''");
+    const albumId = sha256(albumTitle);
+    const artistName = albumResponseJson["artists"][0]["name"].replace(
+      /'/gi,
+      "''"
+    );
+    const artistId = sha256(artistName);
+    const albumImg = albumResponseJson["images"][0]["url"];
+    const albumTracks = albumResponseJson["tracks"]["items"];
+    const randomAvgRating = Math.floor(Math.random() * 5) + 1;
+  } catch (err) {
+    console.log("Error getting album: ", err);
+  }
 
   try {
     if (insertArtist) {
+      console.log("Inserting artist...");
       // insert artist info if they do not already exist in the DB
       (await connection).execute(`
       INSERT INTO artists
@@ -116,6 +132,7 @@ async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
     }
 
     if (insertAlbum) {
+      console.log("Inserting album...");
       // insert album info if album does not exist
       (await connection).execute(`
       INSERT INTO albums
@@ -124,6 +141,7 @@ async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
     `);
 
       // insert info into album_artist bridging table if info does not already exist
+      console.log("Inserting into album_artists...");
       (await connection).execute(`
       INSERT INTO album_artists
       (artist_id, album_id)
@@ -160,7 +178,9 @@ async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
       console.log("Successfully inserted album_artists and songs!");
       connection.destroy();
     }
-  } catch {
-    console.error("Massive error! Good thing I 'caught' it!");
+  } catch (err) {
+    console.error("Massive error! Good thing I 'caught' it!", err);
   }
 }
+
+dataFetchRunner();
