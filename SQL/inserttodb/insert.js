@@ -58,12 +58,8 @@ const dataFetchRunner = async () => {
             "name"
           ]
         );
-        console.log(
-          "Checking whether to insert... album ID is " +
-            dbAlbumId +
-            " and artist ID is " +
-            dbArtistId
-        );
+
+        console.log("Checking whether to insert...");
         const albumExistsResponse = await connection.query(`
           SELECT album_id FROM albums
           WHERE album_id = '${dbAlbumId}';
@@ -72,10 +68,18 @@ const dataFetchRunner = async () => {
           SELECT artist_id FROM artists
           WHERE artist_id = '${dbArtistId}';
         `);
+        console.log(artistExistsResponse);
 
         let [insertAlbum, insertArtist] = [false, false];
-        if (albumExistsResponse[0].length === 0) insertAlbum = true;
-        if (artistExistsResponse[0].length === 0) insertArtist = true;
+
+        if (albumExistsResponse[0].length === 0) {
+          insertAlbum = true;
+          console.log("Not inserting album.");
+        }
+        if (artistExistsResponse[0].length === 0) {
+          insertArtist = true;
+          console.log("Not inserting artist.");
+        }
 
         if (insertAlbum || insertArtist) {
           const spotifyAlbumId = playlistResponseJson["items"][i]["track"][
@@ -94,34 +98,31 @@ const dataFetchRunner = async () => {
 
 async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
   const connection = pool.getConnection();
-  try {
-    // fetch album info from spotify
-    const albumResponse = await fetch(`${API_URL}/albums/${spotifyAlbumId}`, {
-      headers: new Headers({
-        Authorization: `Bearer ${spotifyAccessToken}`,
-      }),
-    });
-    const albumResponseJson = await albumResponse.json();
 
-    // use album info to populate the following fields for insertion
-    const releaseDate = albumResponseJson["release_date"];
-    const albumTitle = albumResponseJson["name"].replace(/'/gi, "''");
-    const albumId = sha256(albumTitle);
-    const artistName = albumResponseJson["artists"][0]["name"].replace(
-      /'/gi,
-      "''"
-    );
-    const artistId = sha256(artistName);
-    const albumImg = albumResponseJson["images"][0]["url"];
-    const albumTracks = albumResponseJson["tracks"]["items"];
-    const randomAvgRating = Math.floor(Math.random() * 5) + 1;
-  } catch (err) {
-    console.log("Error getting album: ", err);
-  }
+  // fetch album info from spotify
+  const albumResponse = await fetch(`${API_URL}/albums/${spotifyAlbumId}`, {
+    headers: new Headers({
+      Authorization: `Bearer ${spotifyAccessToken}`,
+    }),
+  });
+  const albumResponseJson = await albumResponse.json();
+
+  // use album info to populate the following fields for insertion
+  const releaseDate = albumResponseJson["release_date"];
+  const albumTitle = albumResponseJson["name"].replace(/'/gi, "''");
+  const albumId = sha256(albumTitle);
+  const artistName = albumResponseJson["artists"][0]["name"].replace(
+    /'/gi,
+    "''"
+  );
+  const artistId = sha256(artistName);
+  const albumImg = albumResponseJson["images"][0]["url"];
+  const albumTracks = albumResponseJson["tracks"]["items"];
+  const randomAvgRating = Math.floor(Math.random() * 5) + 1;
 
   try {
     if (insertArtist) {
-      console.log("Inserting artist...");
+      console.log("Inserting artist " + artistName);
       // insert artist info if they do not already exist in the DB
       (await connection).execute(`
       INSERT INTO artists
@@ -132,7 +133,7 @@ async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
     }
 
     if (insertAlbum) {
-      console.log("Inserting album...");
+      console.log("Inserting album " + albumTitle);
       // insert album info if album does not exist
       (await connection).execute(`
       INSERT INTO albums
