@@ -13,7 +13,7 @@ const pool = mysql.createPool({
 
 const AUTH_URL = "https://accounts.spotify.com/api/token";
 const API_URL = "https://api.spotify.com/v1";
-
+const test = 0;
 // acquire access token from spotify
 let spotifyAccessToken;
 const getCredentials = async () => {
@@ -44,15 +44,17 @@ const dataFetchRunner = async () => {
         headers: new Headers({
           Authorization: `Bearer ${spotifyAccessToken}`,
         }),
-      }
+      },
     );
     const playlistResponseJson = await playlistResponse.json();
     for (let j = 0; i < playlistResponseJson["items"].length; i++) {
       const dbAlbumId = sha256(
-        playlistResponseJson["items"][j]["track"]["album"]["name"]
+        playlistResponseJson["items"][j]["track"]["album"]["name"],
       );
       const dbArtistId = sha256(
-        playlistResponseJson["items"][j]["track"]["album"]["artists"][0]["name"]
+        playlistResponseJson["items"][j]["track"]["album"]["artists"][0][
+          "name"
+        ],
       );
       const albumExistsResponse = connection.query(`
         SELECT album_id FROM albums
@@ -97,7 +99,7 @@ async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
   const albumId = sha256(albumTitle);
   const artistName = albumResponseJson["artists"][0]["name"].replace(
     /'/gi,
-    "''"
+    "''",
   );
   const artistId = sha256(artistName);
   const albumImg = albumResponseJson["images"][0]["url"];
@@ -153,7 +155,7 @@ async function getAlbumAndInsert(spotifyAlbumId, insertArtist, insertAlbum) {
         (song_title, track_number, artist_id, album_id, song_id)
         VALUES ('${curSong["name"].replace(
           /'/gi,
-          "''"
+          "''",
         )}', '${trackNumber}', '${artistId}', '${albumId}', '${songId}');
       `);
       }
